@@ -65,3 +65,47 @@ header{position:sticky;top:0;z-index:40;background:rgba(22,22,22,.96);color:#fff
 .factor-axis span:nth-child(2){text-align:center}
 .factor-axis span:nth-child(3){text-align:right}
 .fval{font-variant-numeric:tabular-nums}
+
+
+/* Recruitment name extras */
+.video-link{
+  display:inline-block;
+  margin-left:5px;
+  padding:2px 6px;
+  border-radius:999px;
+  background:#e8f0fe;
+  color:#1659a6;
+  text-decoration:none;
+  font-size:.68em;
+  font-weight:900;
+  vertical-align:2px;
+}
+.lname .video-link{font-size:8px;vertical-align:1px}
+.stitle .video-link{font-size:10px;vertical-align:2px}
+
+/* Five fixed video ratings */
+.video-grid{grid-template-columns:repeat(5,1fr);gap:5px}
+.video-item{padding:7px 4px;text-align:center}
+.video-item .video-l{font-size:7px;line-height:1.25;min-height:18px}
+.video-item .video-v{font-size:18px;line-height:1.1}
+.video-num{display:block;font-size:7px;color:#888;margin-top:2px;font-weight:700}
+.video-item.good .video-v{color:#16734a}
+.video-item.normal .video-v{color:#333}
+.video-item.watch .video-v{color:#ad6500}
+.video-item.missing .video-v{color:#aaa}
+
+/* Future body estimates */
+.future-body{
+  margin:-2px 12px 10px;
+  background:#f7f7f7;
+  border:1px solid #e1e1e1;
+  border-radius:11px;
+  padding:8px 10px;
+}
+.future-title{font-size:9px;font-weight:950;color:#555;margin-bottom:5px}
+.future-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.future-item{background:#fff;border-radius:8px;padding:6px 7px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.future-label{font-size:8px;color:#777}
+.future-item b{font-size:12px;font-variant-numeric:tabular-nums}
+.future-avg{font-size:8px;color:#666;margin-top:5px}
+.future-note{font-size:7px;line-height:1.4;color:#999;margin-top:3px}

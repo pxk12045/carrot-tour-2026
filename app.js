@@ -1,5 +1,5 @@
 
-const H=window.HORSES, V=window.VENUES, VE=window.VIDEO_EVAL||{}, FD=window.FAMILY_DATA||{}, SD=window.SURGERY_DATA||{};
+const H=window.HORSES, V=window.VENUES, VE=window.VIDEO_EVAL||{}, FD=window.FAMILY_DATA||{}, SD=window.SURGERY_DATA||{}, TE=window.TOUR_EXTRA||{horses:{},cohortAverage:{}};
 
 const FACTOR_ORDER=['体高','胸囲','管囲','募集時体重','募集価格','生月日補正','想定FR','性別'];
 
@@ -13,6 +13,17 @@ const $=id=>document.getElementById(id);
 const stateKey=no=>'carrot2026_'+no;
 function loadState(no){try{return JSON.parse(localStorage.getItem(stateKey(no))||'{}')}catch(e){return {}}}
 function saveState(no,s){localStorage.setItem(stateKey(no),JSON.stringify(s))}
+
+function extra(no){return (TE.horses||{})[String(no)]||{}}
+function safeText(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function displayName(h){return `${extra(h.no).motherPriority?'●':''}${h.name}`}
+function videoLink(h,label='▶動画'){
+ const url=extra(h.no).videoUrl;
+ if(!url)return '';
+ return `<a class="video-link" href="${safeText(url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${label}</a>`;
+}
+function signed(v){return `${v>=0?'+':''}${Number(v).toFixed(1)}`}
+
 function venueObj(){return V.find(v=>v.id===venue)}
 function currentVenueHorses(){return H.filter(h=>h.venue===venue)}
 function tierClass(h){return h.tier}
@@ -35,7 +46,7 @@ function buildList(mode){
 }
 function appendCard(h){
  const c=document.createElement('div');c.className='list-card';c.dataset.search=`${h.no} ${h.name} ${h.sire} ${h.dam} ${h.bms} ${h.trainer}`.toLowerCase();
- c.innerHTML=`<div class="rankbadge ${tierClass(h)}">#${h.rank}</div><div><div class="lname">No.${h.no} ${h.name}</div><div class="lsub">${h.sire} / 母 ${h.dam} / ${h.trainer}</div></div><div class="lright">v3 ${h.score.toFixed(1)}<br>FR ${Math.round(h.predFR)}kg</div>`;
+ c.innerHTML=`<div class="rankbadge ${tierClass(h)}">#${h.rank}</div><div><div class="lname">No.${h.no} ${safeText(displayName(h))} ${videoLink(h)}</div><div class="lsub">${safeText(h.sire)} / 母 ${safeText(h.dam)} / ${safeText(h.trainer)}</div></div><div class="lright">v3 ${h.score.toFixed(1)}<br>FR ${Math.round(h.predFR)}kg</div>`;
  c.onclick=()=>openHorse(h.no);$('list').appendChild(c)
 }
 function setView(mode){
@@ -64,7 +75,17 @@ function renderFactors(){
 }
 function renderVideo(no){
  const d=VE[String(no)]||{};$('videoGrid').innerHTML='';
- ['前進気勢','首差','うねり','歩様'].forEach(k=>{const v=d[k];const box=document.createElement('div');box.className='video-item';box.innerHTML=`<div class="video-l">${k}</div><div class="video-v">${v===null||v===undefined||v===''?'未登録':v}</div>`;$('videoGrid').appendChild(box)})
+ const map={1:'◎',0:'○','-1':'△'};
+ ['前進気勢','首差し','力強さ','うねり・柔らかさ','足捌き'].forEach(k=>{
+   const v=d[k];
+   const box=document.createElement('div');
+   const cls=v===1?'good':v===0?'normal':v===-1?'watch':'missing';
+   box.className='video-item '+cls;
+   const symbol=(v===null||v===undefined||v==='')?'—':map[String(v)];
+   const num=(v===null||v===undefined||v==='')?'':`<span class="video-num">${v}</span>`;
+   box.innerHTML=`<div class="video-l">${k}</div><div class="video-v">${symbol}${num}</div>`;
+   $('videoGrid').appendChild(box)
+ })
 }
 function yenMan(y){
  if(y===null||y===undefined)return '—';
@@ -102,6 +123,18 @@ function renderFamily(no){
  });
  $('familySourceNote').textContent=d.source?'兄姉成績：へっぽこ軍団公開データ（取得時点）。中央・地方は分けて表示。':'母年齢・産駒順：募集馬基礎データ。';
 }
+function renderFutureBody(no){
+ const e=extra(no), avg=TE.cohortAverage||{};
+ if(e.futureHeight==null||e.futureChest==null){
+   $('futureBody').classList.add('hidden');return;
+ }
+ $('futureHeight').textContent=`${e.futureHeight.toFixed(1)}cm (${signed(e.futureHeightDiff)})`;
+ $('futureChest').textContent=`${e.futureChest.toFixed(1)}cm (${signed(e.futureChestDiff)})`;
+ $('futureHeight').style.color=e.futureHeightColor||'';
+ $('futureChest').style.color=e.futureChestColor||'';
+ $('futureAvg').textContent=`94頭平均：体高 ${Number(avg.futureHeight).toFixed(1)}cm / 胸囲 ${Number(avg.futureChest).toFixed(1)}cm`;
+ $('futureBody').classList.remove('hidden');
+}
 function renderSurgery(no){
  const text=SD[String(no)];
  const box=$('surgery');
@@ -114,11 +147,11 @@ function renderSurgery(no){
  box.classList.remove('hidden');
 }
 function openHorse(no){
- const h=byNo[no];current=h;$('stitle').textContent=`No.${h.no} ${h.name}`;$('smeta').textContent=`${h.sex} / ${h.trainer} / ${h.birthday}`;
+ const h=byNo[no];current=h;$('stitle').innerHTML=`No.${h.no} ${safeText(displayName(h))} ${videoLink(h)}`;$('smeta').textContent=`${h.sex} / ${h.trainer} / ${h.birthday}`;
  $('psire').textContent=h.sire;$('pdam').textContent=h.dam;$('pbms').textContent=h.bms;
  $('mrank').textContent='#'+h.rank;$('mscore').textContent=h.score.toFixed(1);$('mprice').textContent=Math.round(h.price).toLocaleString()+'万';
  $('mweight').textContent=Math.round(h.weight)+'kg';$('mfr').textContent=Math.round(h.predFR)+'kg';$('mgain').textContent=(h.gain>=0?'+':'')+Math.round(h.gain)+'kg';
- $('measure').innerHTML=`体高 <b>${h.height.toFixed(1)}</b>cm　胸囲 <b>${h.chest.toFixed(1)}</b>cm　管囲 <b>${h.cannon.toFixed(1)}</b>cm`;renderSurgery(no);
+ $('measure').innerHTML=`体高 <b>${h.height.toFixed(1)}</b>cm　胸囲 <b>${h.chest.toFixed(1)}</b>cm　管囲 <b>${h.cannon.toFixed(1)}</b>cm`;renderFutureBody(no);renderSurgery(no);
  $('earnIndex').textContent=h.earnIndex.toFixed(1);$('earnRank').textContent=`94頭中 ${h.earnRank}位相当`;
  $('winIndex').textContent=h.winIndex.toFixed(1);$('winRank').textContent=`94頭中 ${h.winRank}位相当`;
  const s=loadState(no);$('star').textContent=s.star?'★':'☆';$('star').classList.toggle('on',!!s.star);$('memo').value=s.memo||'';

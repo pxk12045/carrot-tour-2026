@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="CARROT TOUR">
-<link rel="manifest" href="manifest.webmanifest?v=20260826-v6">
+<link rel="manifest" href="manifest.webmanifest?v=20260827-v7">
 <link rel="apple-touch-icon" href="icon-180.png">
-<link rel="stylesheet" href="style.css?v=20260826-v6">
+<link rel="stylesheet" href="style.css?v=20260827-v7">
 <title>CARROT TOUR 2026</title>
 </head>
 <body>
@@ -67,6 +67,15 @@
   <div class="metric"><div id="mgain" class="v"></div><div class="l">想定増加</div></div>
  </div>
  <div id="measure" class="measure"></div>
+ <div id="futureBody" class="future-body">
+   <div class="future-title">初出走時の体格参考推定</div>
+   <div class="future-grid">
+     <div class="future-item"><span class="future-label">将来体高</span><b id="futureHeight"></b></div>
+     <div class="future-item"><span class="future-label">将来胸囲</span><b id="futureChest"></b></div>
+   </div>
+   <div id="futureAvg" class="future-avg"></div>
+   <div class="future-note">想定FR÷募集時体重の立方根を体高・胸囲へ掛けた参考推定。括弧内は94頭平均との差。</div>
+ </div>
  <div id="surgery" class="surgery hidden">
    <div class="surgery-title">手術歴</div>
    <div id="surgeryText" class="surgery-text"></div>
@@ -86,14 +95,15 @@
  <div class="video">
    <div class="sectitle">動画評価</div>
    <div id="videoGrid" class="video-grid"></div>
-   <div class="locked">🔒 動画評価は参照専用。後日受領する評価リストの固定値を表示し、この画面からは変更できません。</div>
+   <div class="locked">🔒 添付評価表の固定値。1=◎ / 0=○ / -1=△。この画面からは変更できません。</div>
  </div>
  <div class="memo"><textarea id="memo" placeholder="現地メモ（この端末だけに保存）"></textarea></div>
  <button id="close" class="close">閉じる</button>
 </div>
-<script src="horses.js?v=20260826-v6"></script>
-<script src="video-evaluation.js?v=20260826-v6"></script>
-<script src="family-data.js?v=20260826-v6"></script>
-<script src="surgery-data.js?v=20260826-v6"></script>
-<script src="app.js?v=20260826-v6"></script>
+<script src="horses.js?v=20260827-v7"></script>
+<script src="video-evaluation.js?v=20260827-v7"></script>
+<script src="family-data.js?v=20260827-v7"></script>
+<script src="surgery-data.js?v=20260827-v7"></script>
+<script src="tour-extra-data.js?v=20260827-v7"></script>
+<script src="app.js?v=20260827-v7"></script>
 </body></html>

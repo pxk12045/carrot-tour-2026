@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="CARROT TOUR">
-<link rel="manifest" href="manifest.webmanifest">
+<link rel="manifest" href="manifest.webmanifest?v=20260826-family4">
 <link rel="apple-touch-icon" href="icon-180.png">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=20260826-family4">
 <title>CARROT TOUR 2026</title>
 </head>
 <body>
@@ -45,6 +45,19 @@
  <div class="handle"></div>
  <div class="shead"><div><div id="stitle" class="stitle"></div><div id="smeta" class="smeta"></div></div><button id="star" class="star">☆</button></div>
  <div class="pedigree"><div class="sectitle">血統</div><div class="pedgrid"><div class="pl">父</div><div id="psire" class="pv"></div><div class="pl">母</div><div id="pdam" class="pv"></div><div class="pl">母父</div><div id="pbms" class="pv"></div></div></div>
+ <div class="family">
+   <div class="sectitle">母・兄姉情報</div>
+   <div class="family-kpis">
+     <div class="family-kpi"><div id="damAge" class="fv"></div><div class="fl">母 出産時年齢</div></div>
+     <div class="family-kpi"><div id="foalOrder" class="fv"></div><div class="fl">本馬</div></div>
+   </div>
+   <div id="familySummary" class="family-summary"></div>
+   <details id="siblingsDetails" class="siblings-details">
+     <summary id="siblingsSummary">兄姉を見る</summary>
+     <div id="siblingsList" class="siblings-list"></div>
+   </details>
+   <div id="familySourceNote" class="family-source"></div>
+ </div>
  <div class="metrics">
   <div class="metric"><div id="mrank" class="v"></div><div class="l">全94頭順位</div></div>
   <div class="metric"><div id="mscore" class="v"></div><div class="l">v3指数</div></div>
@@ -73,7 +86,8 @@
  <div class="memo"><textarea id="memo" placeholder="現地メモ（この端末だけに保存）"></textarea></div>
  <button id="close" class="close">閉じる</button>
 </div>
-<script src="horses.js"></script>
-<script src="video-evaluation.js"></script>
-<script src="app.js"></script>
+<script src="horses.js?v=20260826-family4"></script>
+<script src="video-evaluation.js?v=20260826-family4"></script>
+<script src="family-data.js?v=20260826-family4"></script>
+<script src="app.js?v=20260826-family4"></script>
 </body></html>

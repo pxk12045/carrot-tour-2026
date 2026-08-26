@@ -46,15 +46,35 @@ function effectiveVideoRating(no,key){
  return Object.prototype.hasOwnProperty.call(saved,key)?saved[key]:defaults[key];
 }
 
-function venueObj(){return V.find(v=>v.id===venue)}
-function currentVenueHorses(){return H.filter(h=>h.venue===venue)}
+function isAllScope(){return venue==='all'}
+function venueObj(){return isAllScope()?null:V.find(v=>v.id===venue)}
+function currentVenueHorses(){return isAllScope()?H:H.filter(h=>h.venue===venue)}
 function tierClass(h){return h.tier}
 function renderVenueTabs(){
  $('venueTabs').innerHTML='';
- V.forEach(v=>{const b=document.createElement('button');b.className='venue-tab'+(v.id===venue?' active':'');b.textContent=v.label;b.onclick=()=>{venue=v.id;renderAll()};$('venueTabs').appendChild(b)})
+ const scopes=[...V.map(v=>({id:v.id,label:v.label})),{id:'all',label:'全94頭'}];
+ scopes.forEach(s=>{
+   const b=document.createElement('button');
+   b.className='venue-tab'+(s.id===venue?' active':'');
+   b.textContent=s.label;
+   b.onclick=()=>{
+     venue=s.id;
+     if(isAllScope() && view==='map') view='venueList';
+     renderAll();
+   };
+   $('venueTabs').appendChild(b);
+ });
 }
-function renderHeader(){const v=venueObj();$('venueTitle').textContent=v.title;$('venueTime').textContent=v.time}
+function renderHeader(){
+ if(isAllScope()){
+   $('venueTitle').textContent='全94頭';
+   $('venueTime').textContent='全会場';
+ }else{
+   const v=venueObj();$('venueTitle').textContent=v.title;$('venueTime').textContent=v.time;
+ }
+}
 function renderMap(){
+ if(isAllScope()) return;
  const v=venueObj(), hs=currentVenueHorses();
  $('mapImg').src=v.image;$('mapStage').querySelectorAll('.marker').forEach(x=>x.remove());
  hs.forEach(h=>{const b=document.createElement('button');b.className='marker '+tierClass(h);b.style.left=h.x+'%';b.style.top=h.y+'%';b.innerHTML=`<span class="mn">${h.no}</span><span class="mr">#${h.rank}</span>`;b.onclick=()=>openHorse(h.no);$('mapStage').appendChild(b)});
@@ -63,22 +83,36 @@ function renderMap(){
 }
 function buildList(mode){
  listMode=mode; $('list').innerHTML=''; $('search').value='';
+ const scope=currentVenueHorses();
  let hs=
-   mode==='allList'?H:
-   mode==='stars'?H.filter(h=>loadState(h.no).star):
-   mode==='waveSoftGood'?H.filter(h=>effectiveVideoRating(h.no,'うねり・柔らかさ')===1):
-   currentVenueHorses();
- hs=[...hs].sort((a,b)=>a.rank-b.rank); hs.forEach(h=>appendCard(h))
+   mode==='stars'?scope.filter(h=>loadState(h.no).star):
+   mode==='waveSoftGood'?scope.filter(h=>effectiveVideoRating(h.no,'うねり・柔らかさ')===1):
+   scope;
+ hs=[...hs].sort((a,b)=>a.rank-b.rank);
+ hs.forEach(h=>appendCard(h));
 }
 function appendCard(h){
  const c=document.createElement('div');c.className='list-card';c.dataset.search=`${h.no} ${h.name} ${h.sire} ${h.dam} ${h.bms} ${h.trainer}`.toLowerCase();
  c.innerHTML=`<div class="rankbadge ${tierClass(h)}">#${h.rank}</div><div><div class="lname">No.${h.no} ${safeText(displayName(h))} ${videoLink(h)}</div><div class="lsub">${safeText(h.sire)} / 母 ${safeText(h.dam)} / ${safeText(h.trainer)}</div></div><div class="lright">v3 ${h.score.toFixed(1)}<br>FR ${Math.round(h.predFR)}kg</div>`;
  c.onclick=()=>openHorse(h.no);$('list').appendChild(c)
 }
+function syncViewButtons(){
+ const mapBtn=document.querySelector('.viewbtn[data-view="map"]');
+ if(mapBtn){
+   mapBtn.disabled=isAllScope();
+   mapBtn.classList.toggle('disabled',isAllScope());
+ }
+ document.querySelectorAll('.viewbtn').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+}
 function setView(mode){
- view=mode;document.querySelectorAll('.viewbtn').forEach(b=>b.classList.toggle('active',b.dataset.view===mode));
- if(mode==='map'){$('mapView').classList.remove('hidden');$('listView').classList.add('hidden')}
- else{$('mapView').classList.add('hidden');$('listView').classList.remove('hidden');buildList(mode)}
+ if(mode==='map' && isAllScope()) return;
+ view=mode;
+ syncViewButtons();
+ if(mode==='map'){
+   $('mapView').classList.remove('hidden');$('listView').classList.add('hidden');renderMap();
+ }else{
+   $('mapView').classList.add('hidden');$('listView').classList.remove('hidden');buildList(mode);
+ }
 }
 document.querySelectorAll('.viewbtn').forEach(b=>b.onclick=()=>setView(b.dataset.view));
 $('search').oninput=e=>{const q=e.target.value.trim().toLowerCase();document.querySelectorAll('.list-card').forEach(c=>c.classList.toggle('hidden',q && !c.dataset.search.includes(q)))}
@@ -194,11 +228,23 @@ function openHorse(no){
 }
 $('freg').onclick=()=>{factorMode='reg';$('freg').classList.add('active');$('fcls').classList.remove('active');renderFactors()}
 $('fcls').onclick=()=>{factorMode='cls';$('fcls').classList.add('active');$('freg').classList.remove('active');renderFactors()}
-$('star').onclick=()=>{const s=loadState(current.no);s.star=!s.star;saveState(current.no,s);$('star').textContent=s.star?'★':'☆';$('star').classList.toggle('on',!!s.star)}
+$('star').onclick=()=>{
+ const s=loadState(current.no);s.star=!s.star;saveState(current.no,s);
+ $('star').textContent=s.star?'★':'☆';$('star').classList.toggle('on',!!s.star);
+ if(view==='stars') buildList('stars');
+}
 $('memo').oninput=e=>{if(!current)return;const s=loadState(current.no);s.memo=e.target.value;saveState(current.no,s)}
 function closeSheet(){$('sheet').classList.remove('open');$('sheetbg').classList.remove('open')}
 $('close').onclick=closeSheet;$('sheetbg').onclick=closeSheet;
-function renderAll(){renderVenueTabs();renderHeader();renderMap();if(view!=='map')buildList(view)}
+function renderAll(){
+ if(isAllScope() && view==='map') view='venueList';
+ renderVenueTabs();renderHeader();syncViewButtons();
+ if(view==='map'){
+   $('mapView').classList.remove('hidden');$('listView').classList.add('hidden');renderMap();
+ }else{
+   $('mapView').classList.add('hidden');$('listView').classList.remove('hidden');buildList(view);
+ }
+}
 window.addEventListener('offline',()=>$('net').classList.add('show'));window.addEventListener('online',()=>$('net').classList.remove('show'));
 if(!navigator.onLine)$('net').classList.add('show');
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));

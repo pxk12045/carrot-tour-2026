@@ -139,3 +139,35 @@ header{position:sticky;top:0;z-index:40;background:rgba(22,22,22,.96);color:#fff
 }
 .viewbar::-webkit-scrollbar{display:none}
 .viewbtn{flex:0 0 auto}
+
+
+/* v10: top row = scope, lower row = view */
+.venue-tabs{
+  display:grid;
+  grid-template-columns:repeat(6,max-content);
+  gap:5px;
+  overflow-x:auto;
+  padding-top:8px;
+}
+.venue-tab{
+  padding:6px 9px;
+  min-width:0;
+}
+.viewbar{
+  justify-content:space-between;
+  overflow:visible;
+  white-space:normal;
+}
+.viewbtn{
+  flex:1 1 0;
+  padding:7px 4px;
+  min-width:0;
+  text-align:center;
+}
+.viewbtn:disabled,.viewbtn.disabled{
+  background:#ececec !important;
+  color:#aaa !important;
+  border-color:#ddd !important;
+  cursor:not-allowed;
+  opacity:.7;
+}

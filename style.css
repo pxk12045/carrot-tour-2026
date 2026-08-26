@@ -128,3 +128,14 @@ header{position:sticky;top:0;z-index:40;background:rgba(22,22,22,.96);color:#fff
 .video-select[data-rating="0"]{color:#333;background:#fff}
 .video-select[data-rating="-1"]{color:#a45d00;background:#fff6e9}
 .video-select[data-rating=""]{color:#aaa;background:#f6f6f6}
+
+
+/* Five top view buttons: horizontally scrollable on iPhone */
+.viewbar{
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  white-space:nowrap;
+  scrollbar-width:none;
+}
+.viewbar::-webkit-scrollbar{display:none}
+.viewbtn{flex:0 0 auto}

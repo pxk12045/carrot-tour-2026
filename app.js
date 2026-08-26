@@ -39,6 +39,13 @@ function videoLink(h,label='▶動画'){
 }
 function signed(v){return `${v>=0?'+':''}${Number(v).toFixed(1)}`}
 
+
+function effectiveVideoRating(no,key){
+ const defaults=VE[String(no)]||{};
+ const s=loadState(no), saved=s.videoEval||{};
+ return Object.prototype.hasOwnProperty.call(saved,key)?saved[key]:defaults[key];
+}
+
 function venueObj(){return V.find(v=>v.id===venue)}
 function currentVenueHorses(){return H.filter(h=>h.venue===venue)}
 function tierClass(h){return h.tier}
@@ -56,7 +63,11 @@ function renderMap(){
 }
 function buildList(mode){
  listMode=mode; $('list').innerHTML=''; $('search').value='';
- let hs=mode==='allList'?H:mode==='stars'?H.filter(h=>loadState(h.no).star):currentVenueHorses();
+ let hs=
+   mode==='allList'?H:
+   mode==='stars'?H.filter(h=>loadState(h.no).star):
+   mode==='waveSoftGood'?H.filter(h=>effectiveVideoRating(h.no,'うねり・柔らかさ')===1):
+   currentVenueHorses();
  hs=[...hs].sort((a,b)=>a.rank-b.rank); hs.forEach(h=>appendCard(h))
 }
 function appendCard(h){
@@ -104,6 +115,7 @@ function renderVideo(no){
      const st=loadState(no); st.videoEval=st.videoEval||{};
      st.videoEval[k]=sel.value===''?null:Number(sel.value); saveState(no,st);
      sel.dataset.rating=sel.value;
+     if(k==='うねり・柔らかさ' && view==='waveSoftGood') buildList('waveSoftGood');
    };
    sel.dataset.rating=(v===null||v===undefined?'':String(v));
    box.innerHTML=`<div class="video-l">${k}</div>`; box.appendChild(sel); $('videoGrid').appendChild(box);

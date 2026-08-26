@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="CARROT TOUR">
-<link rel="manifest" href="manifest.webmanifest?v=20260826-family4">
+<link rel="manifest" href="manifest.webmanifest?v=20260826-v6">
 <link rel="apple-touch-icon" href="icon-180.png">
-<link rel="stylesheet" href="style.css?v=20260826-family4">
+<link rel="stylesheet" href="style.css?v=20260826-v6">
 <title>CARROT TOUR 2026</title>
 </head>
 <body>
@@ -67,6 +67,10 @@
   <div class="metric"><div id="mgain" class="v"></div><div class="l">想定増加</div></div>
  </div>
  <div id="measure" class="measure"></div>
+ <div id="surgery" class="surgery hidden">
+   <div class="surgery-title">手術歴</div>
+   <div id="surgeryText" class="surgery-text"></div>
+ </div>
  <div class="breakdown">
   <div class="sectitle">v3指数の内訳</div>
   <div class="score-split">
@@ -75,7 +79,8 @@
    <div class="split"><div id="winIndex" class="sv"></div><div class="sl">2勝 index</div><div id="winRank" class="sr"></div></div>
   </div>
   <div class="factor-tabs"><button id="freg" class="ftab active">賞金モデル寄与</button><button id="fcls" class="ftab">2勝モデル寄与</button></div>
-  <div class="factor-note">＋=押し上げ、−=押し下げ。モデル内部の寄与量で、v3点そのものではありません。</div>
+  <div class="factor-note">表示順は全馬固定。寄与指数は各モデルの94頭全体で最大絶対寄与を100とした固定尺度です。馬を切り替えても再スケールしません。</div>
+  <div class="factor-axis"><span>−100</span><span>0</span><span>＋100</span></div>
   <div id="factors"></div>
  </div>
  <div class="video">
@@ -86,8 +91,9 @@
  <div class="memo"><textarea id="memo" placeholder="現地メモ（この端末だけに保存）"></textarea></div>
  <button id="close" class="close">閉じる</button>
 </div>
-<script src="horses.js?v=20260826-family4"></script>
-<script src="video-evaluation.js?v=20260826-family4"></script>
-<script src="family-data.js?v=20260826-family4"></script>
-<script src="app.js?v=20260826-family4"></script>
+<script src="horses.js?v=20260826-v6"></script>
+<script src="video-evaluation.js?v=20260826-v6"></script>
+<script src="family-data.js?v=20260826-v6"></script>
+<script src="surgery-data.js?v=20260826-v6"></script>
+<script src="app.js?v=20260826-v6"></script>
 </body></html>

@@ -1,13 +1,14 @@
-const CACHE='carrot-tour-20260826-family4';
+const CACHE='carrot-tour-20260826-v6';
 const CORE=[
   './',
   './index.html',
-  './style.css?v=20260826-family4',
-  './app.js?v=20260826-family4',
-  './horses.js?v=20260826-family4',
-  './video-evaluation.js?v=20260826-family4',
-  './family-data.js?v=20260826-family4',
-  './manifest.webmanifest?v=20260826-family4',
+  './style.css?v=20260826-v6',
+  './app.js?v=20260826-v6',
+  './horses.js?v=20260826-v6',
+  './video-evaluation.js?v=20260826-v6',
+  './family-data.js?v=20260826-v6',
+  './surgery-data.js?v=20260826-v6',
+  './manifest.webmanifest?v=20260826-v6',
   './icon-180.png',
   './icon-512.png',
   './map-shiraoi.jpg',

@@ -109,3 +109,22 @@ header{position:sticky;top:0;z-index:40;background:rgba(22,22,22,.96);color:#fff
 .future-item b{font-size:12px;font-variant-numeric:tabular-nums}
 .future-avg{font-size:8px;color:#666;margin-top:5px}
 .future-note{font-size:7px;line-height:1.4;color:#999;margin-top:3px}
+
+.nk-link{
+  display:inline-block;margin-left:5px;padding:1px 5px;border-radius:999px;
+  background:#f0f3f8;color:#245a9a;text-decoration:none;font-size:8px;font-weight:850;
+}
+.trainer-stat{
+  display:inline-block;margin-left:3px;padding:1px 5px;border-radius:999px;
+  background:#eef3f0;color:#335c48;font-size:8px;font-weight:850;white-space:nowrap;
+}
+.video-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+.video-select{
+  width:100%;border:1px solid #ccd2d8;background:#fff;border-radius:8px;
+  padding:6px 1px;font-size:17px;font-weight:900;text-align:center;text-align-last:center;
+  appearance:auto;
+}
+.video-select[data-rating="1"]{color:#147a4b;background:#edf8f2}
+.video-select[data-rating="0"]{color:#333;background:#fff}
+.video-select[data-rating="-1"]{color:#a45d00;background:#fff6e9}
+.video-select[data-rating=""]{color:#aaa;background:#f6f6f6}

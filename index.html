@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="CARROT TOUR">
-<link rel="manifest" href="manifest.webmanifest?v=20260827-v7">
+<link rel="manifest" href="manifest.webmanifest?v=20260827-v8">
 <link rel="apple-touch-icon" href="icon-180.png">
-<link rel="stylesheet" href="style.css?v=20260827-v7">
+<link rel="stylesheet" href="style.css?v=20260827-v8">
 <title>CARROT TOUR 2026</title>
 </head>
 <body>
@@ -65,8 +65,10 @@
   <div class="metric"><div id="mweight" class="v"></div><div class="l">募集時体重</div></div>
   <div class="metric"><div id="mfr" class="v"></div><div class="l">想定FR</div></div>
   <div class="metric"><div id="mgain" class="v"></div><div class="l">想定増加</div></div>
+  <div class="metric"><div id="mheight" class="v"></div><div class="l">体高</div></div>
+  <div class="metric"><div id="mchest" class="v"></div><div class="l">胸囲</div></div>
+  <div class="metric"><div id="mcannon" class="v"></div><div class="l">管囲</div></div>
  </div>
- <div id="measure" class="measure"></div>
  <div id="futureBody" class="future-body">
    <div class="future-title">初出走時の体格参考推定</div>
    <div class="future-grid">
@@ -74,7 +76,7 @@
      <div class="future-item"><span class="future-label">将来胸囲</span><b id="futureChest"></b></div>
    </div>
    <div id="futureAvg" class="future-avg"></div>
-   <div class="future-note">想定FR÷募集時体重の立方根を体高・胸囲へ掛けた参考推定。括弧内は94頭平均との差。</div>
+   <div class="future-note">想定FR÷募集時体重の立方根を体高・胸囲へ掛けた参考推定。括弧内は同性平均との差。</div>
  </div>
  <div id="surgery" class="surgery hidden">
    <div class="surgery-title">手術歴</div>
@@ -95,15 +97,16 @@
  <div class="video">
    <div class="sectitle">動画評価</div>
    <div id="videoGrid" class="video-grid"></div>
-   <div class="locked">🔒 添付評価表の固定値。1=◎ / 0=○ / -1=△。この画面からは変更できません。</div>
+   <div class="locked">初期値は添付評価表。◎ / 〇 / △ を選択すると、この端末に保存されます。</div>
  </div>
  <div class="memo"><textarea id="memo" placeholder="現地メモ（この端末だけに保存）"></textarea></div>
  <button id="close" class="close">閉じる</button>
 </div>
-<script src="horses.js?v=20260827-v7"></script>
-<script src="video-evaluation.js?v=20260827-v7"></script>
-<script src="family-data.js?v=20260827-v7"></script>
-<script src="surgery-data.js?v=20260827-v7"></script>
-<script src="tour-extra-data.js?v=20260827-v7"></script>
-<script src="app.js?v=20260827-v7"></script>
+<script src="horses.js?v=20260827-v8"></script>
+<script src="video-evaluation.js?v=20260827-v8"></script>
+<script src="family-data.js?v=20260827-v8"></script>
+<script src="surgery-data.js?v=20260827-v8"></script>
+<script src="tour-extra-data.js?v=20260827-v8"></script>
+<script src="reference-data.js?v=20260827-v8"></script>
+<script src="app.js?v=20260827-v8"></script>
 </body></html>

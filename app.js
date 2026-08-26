@@ -1,5 +1,5 @@
 
-const H=window.HORSES, V=window.VENUES, VE=window.VIDEO_EVAL||{}, FD=window.FAMILY_DATA||{}, SD=window.SURGERY_DATA||{}, TE=window.TOUR_EXTRA||{horses:{},cohortAverage:{}};
+const H=window.HORSES, V=window.VENUES, VE=window.VIDEO_EVAL||{}, FD=window.FAMILY_DATA||{}, SD=window.SURGERY_DATA||{}, TE=window.TOUR_EXTRA||{horses:{},cohortAverageBySex:{}}, RD=window.REFERENCE_DATA||{};
 
 const FACTOR_ORDER=['体高','胸囲','管囲','募集時体重','募集価格','生月日補正','想定FR','性別'];
 
@@ -15,6 +15,21 @@ function loadState(no){try{return JSON.parse(localStorage.getItem(stateKey(no))|
 function saveState(no,s){localStorage.setItem(stateKey(no),JSON.stringify(s))}
 
 function extra(no){return (TE.horses||{})[String(no)]||{}}
+function refData(no){return RD[String(no)]||{}}
+function damLink(h){
+ const r=refData(h.no), url=r.damDirectUrl||r.damSearchUrl;
+ if(!url)return safeText(h.dam);
+ const title=r.damDirectUrl?'netkeiba 母馬ページ':'netkeiba検索（直リンク未取得）';
+ return `${safeText(h.dam)} <a class="nk-link" href="${safeText(url)}" target="_blank" rel="noopener" title="${title}">netkeiba</a>`;
+}
+function trainerStat(h){
+ if(/門別|大井|川崎|船橋|地方/.test(h.trainer))return 'JRA3年集計対象外';
+ const t=(refData(h.no).trainer||{});
+ if(t.status==='ok' && t.wins!=null)return `23–25計 ${t.wins}勝・${t.rank!=null?t.rank+'位':'—位'}`;
+ if(t.status==='not_found')return '23–25計 0勝・—位';
+ return '23–25成績 取得前';
+}
+
 function safeText(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function displayName(h){return `${extra(h.no).motherPriority?'●':''}${h.name}`}
 function videoLink(h,label='▶動画'){
@@ -74,18 +89,25 @@ function renderFactors(){
  });
 }
 function renderVideo(no){
- const d=VE[String(no)]||{};$('videoGrid').innerHTML='';
- const map={1:'◎',0:'○','-1':'△'};
+ const defaults=VE[String(no)]||{}, s=loadState(no), saved=s.videoEval||{};
+ $('videoGrid').innerHTML='';
  ['前進気勢','首差し','力強さ','うねり・柔らかさ','足捌き'].forEach(k=>{
-   const v=d[k];
-   const box=document.createElement('div');
-   const cls=v===1?'good':v===0?'normal':v===-1?'watch':'missing';
-   box.className='video-item '+cls;
-   const symbol=(v===null||v===undefined||v==='')?'—':map[String(v)];
-   const num=(v===null||v===undefined||v==='')?'':`<span class="video-num">${v}</span>`;
-   box.innerHTML=`<div class="video-l">${k}</div><div class="video-v">${symbol}${num}</div>`;
-   $('videoGrid').appendChild(box)
- })
+   const v=Object.prototype.hasOwnProperty.call(saved,k)?saved[k]:defaults[k];
+   const box=document.createElement('div'); box.className='video-item';
+   const sel=document.createElement('select'); sel.className='video-select'; sel.setAttribute('aria-label',k);
+   [['','—'],['1','◎'],['0','〇'],['-1','△']].forEach(([val,lab])=>{
+     const o=document.createElement('option');o.value=val;o.textContent=lab;
+     if((v===null||v===undefined?'':String(v))===val)o.selected=true;
+     sel.appendChild(o);
+   });
+   sel.onchange=()=>{
+     const st=loadState(no); st.videoEval=st.videoEval||{};
+     st.videoEval[k]=sel.value===''?null:Number(sel.value); saveState(no,st);
+     sel.dataset.rating=sel.value;
+   };
+   sel.dataset.rating=(v===null||v===undefined?'':String(v));
+   box.innerHTML=`<div class="video-l">${k}</div>`; box.appendChild(sel); $('videoGrid').appendChild(box);
+ });
 }
 function yenMan(y){
  if(y===null||y===undefined)return '—';
@@ -124,7 +146,7 @@ function renderFamily(no){
  $('familySourceNote').textContent=d.source?'兄姉成績：へっぽこ軍団公開データ（取得時点）。中央・地方は分けて表示。':'母年齢・産駒順：募集馬基礎データ。';
 }
 function renderFutureBody(no){
- const e=extra(no), avg=TE.cohortAverage||{};
+ const e=extra(no), h=byNo[no], avg=(TE.cohortAverageBySex||{})[h.sex]||{};
  if(e.futureHeight==null||e.futureChest==null){
    $('futureBody').classList.add('hidden');return;
  }
@@ -132,7 +154,7 @@ function renderFutureBody(no){
  $('futureChest').textContent=`${e.futureChest.toFixed(1)}cm (${signed(e.futureChestDiff)})`;
  $('futureHeight').style.color=e.futureHeightColor||'';
  $('futureChest').style.color=e.futureChestColor||'';
- $('futureAvg').textContent=`94頭平均：体高 ${Number(avg.futureHeight).toFixed(1)}cm / 胸囲 ${Number(avg.futureChest).toFixed(1)}cm`;
+ $('futureAvg').textContent=`${h.sex}平均：体高 ${Number(avg.futureHeight).toFixed(1)}cm / 胸囲 ${Number(avg.futureChest).toFixed(1)}cm`;
  $('futureBody').classList.remove('hidden');
 }
 function renderSurgery(no){
@@ -147,11 +169,11 @@ function renderSurgery(no){
  box.classList.remove('hidden');
 }
 function openHorse(no){
- const h=byNo[no];current=h;$('stitle').innerHTML=`No.${h.no} ${safeText(displayName(h))} ${videoLink(h)}`;$('smeta').textContent=`${h.sex} / ${h.trainer} / ${h.birthday}`;
- $('psire').textContent=h.sire;$('pdam').textContent=h.dam;$('pbms').textContent=h.bms;
- $('mrank').textContent='#'+h.rank;$('mscore').textContent=h.score.toFixed(1);$('mprice').textContent=Math.round(h.price).toLocaleString()+'万';
+ const h=byNo[no];current=h;$('stitle').innerHTML=`No.${h.no} ${safeText(displayName(h))} ${videoLink(h)}`;$('smeta').innerHTML=`${safeText(h.sex)} / ${safeText(h.trainer)} <span class="trainer-stat">${safeText(trainerStat(h))}</span> / ${safeText(h.birthday)}`;
+ $('psire').textContent=h.sire;$('pdam').innerHTML=damLink(h);$('pbms').textContent=h.bms;
+ $('mrank').textContent='#'+h.rank;$('mscore').textContent=h.score.toFixed(1);$('mprice').textContent=Math.round(h.price)+'万';
  $('mweight').textContent=Math.round(h.weight)+'kg';$('mfr').textContent=Math.round(h.predFR)+'kg';$('mgain').textContent=(h.gain>=0?'+':'')+Math.round(h.gain)+'kg';
- $('measure').innerHTML=`体高 <b>${h.height.toFixed(1)}</b>cm　胸囲 <b>${h.chest.toFixed(1)}</b>cm　管囲 <b>${h.cannon.toFixed(1)}</b>cm`;renderFutureBody(no);renderSurgery(no);
+ $('mheight').textContent=h.height.toFixed(1)+'cm';$('mchest').textContent=h.chest.toFixed(1)+'cm';$('mcannon').textContent=h.cannon.toFixed(1)+'cm';renderFutureBody(no);renderSurgery(no);
  $('earnIndex').textContent=h.earnIndex.toFixed(1);$('earnRank').textContent=`94頭中 ${h.earnRank}位相当`;
  $('winIndex').textContent=h.winIndex.toFixed(1);$('winRank').textContent=`94頭中 ${h.winRank}位相当`;
  const s=loadState(no);$('star').textContent=s.star?'★':'☆';$('star').classList.toggle('on',!!s.star);$('memo').value=s.memo||'';

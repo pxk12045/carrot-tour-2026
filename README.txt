@@ -1,56 +1,44 @@
-﻿CARROT TOUR v7 更新パック
+﻿CARROT TOUR v8 更新パック
 =========================
 
-GitHubリポジトリ直下へアップロード
-
-上書き:
+GitHubリポジトリ直下へ上書き/追加:
 - app.js
 - style.css
 - index.html
 - sw.js
-- video-evaluation.js
-
-追加:
 - tour-extra-data.js
+- video-evaluation.js
+- reference-data.js
+- update_reference_data.py
 
-上書きしない:
-- family-data.js
-- horses.js
-- surgery-data.js
-- scrape_families.py
+Workflow:
+update-reference-data.yml の中身を
+.github/workflows/update-reference-data.yml
+として登録してください。
+
+その後:
+Actions → Update reference data → Run workflow
 
 変更内容
---------
-1. 動画評価
-   添付 bosyuba-list-20260818.csv から固定表示。
-   前進気勢 / 首差し / 力強さ / うねり・柔らかさ / 足捌き
-   1=◎, 0=○, -1=△
-   No.56 マルシュロレーヌの25 は元CSVが空欄のため「—」。
+1. 動画評価は ◎ / 〇 / △ の選択式。変更値はiPhone/ブラウザ内localStorageへ保存。
+   1,0,-1の数字は非表示。
+2. 母名の後ろにnetkeibaリンク。
+   Action後は母馬の直接ページ。取得前/失敗時だけ検索リンクへfallback。
+3. 厩舎名後ろに「23–25計 XXX勝・YY位」。
+   2023–2025 JRA年間リーディングの勝数を合算し、3年合計勝数で順位を再計算。
+   地方予定馬は「JRA3年集計対象外」。
+4. 体高 / 胸囲 / 管囲も他の測尺と同じカード表示。
+5. 募集額はカンマなし（4000万）。
+6. 将来体高/胸囲の比較・ヒートマップを牡牝別へ修正。
+   想定FRそのものも元から牡牝別Huberモデル。
 
-2. 母馬優先
-   CSVの「●」を募集馬名の直前へ表示。
-   対象 57頭。
+同性別の将来推定平均:
+牡 n=48: 体高 158.9cm / 胸囲 179.0cm
+牝 n=46: 体高 156.3cm / 胸囲 177.6cm
 
-3. 動画リンク
-   募集馬名の直後に「▶動画」。
-   キャロットクラブ公式の各募集馬ページへ遷移。
-   URL形式: https://carrotclub.net/sp/horse/bosyuba.asp?id=25XXX
-
-4. 将来体高・将来胸囲
-   scale = (想定FR / 募集時体重)^(1/3)
-   将来体高 = 現在体高 × scale
-   将来胸囲 = 現在胸囲 × scale
-
-   94頭平均:
-   将来体高 157.6 cm
-   将来胸囲 178.3 cm
-
-   平均より小さい側を青、平均付近をグレー、大きい側を赤。
-   色尺度は94頭全体の標準偏差を使い±2SDで固定。
+確認:
+https://pxk12045.github.io/carrot-tour-2026/?v=8
 
 注意:
-将来体高・胸囲は実測縦断データによる学習モデルではなく、
-体重変化を相似則で線寸法へ変換した参考推定です。
-
-確認URL:
-https://pxk12045.github.io/carrot-tour-2026/?v=7
+family-data.js は上書きしないでください。
+surgery-data.js / horses.js も上書き不要です。

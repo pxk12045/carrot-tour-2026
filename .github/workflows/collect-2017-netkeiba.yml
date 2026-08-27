@@ -1,0 +1,46 @@
+name: Collect 2017 netkeiba
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Pilot row count. 0 = all 80. First run: 10 recommended."
+        required: true
+        default: "10"
+      delay:
+        description: "Seconds between requests (be gentle to source site)"
+        required: true
+        default: "1.5"
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 lxml
+
+      - name: Collect
+        run: |
+          python collect_2017_netkeiba.py \
+            --limit "${{ github.event.inputs.limit }}" \
+            --delay "${{ github.event.inputs.delay }}"
+
+      - name: Commit outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data_2017_netkeiba/
+          git commit -m "Update 2017 netkeiba collection" || exit 0
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main

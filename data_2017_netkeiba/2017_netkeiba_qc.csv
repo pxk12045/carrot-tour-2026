@@ -1,2 +1,31 @@
 ﻿source_no,recruitment_name,legacy_racehorse_name,mapped_racehorse_name,mapping_status,horse_id,price_man_yen,performance_status,qc_notes
 504,ローガンサファイアの2017,エルサフィーロ,,ok_verified_override,2017105657,4400.0,ok,price filled from verified official catalogue fallback
+509,リッチダンサーの2017,クロスキー,,no_candidate,,,,netkeiba mapping candidate not found
+515,パラダイスコーブの2017,ラルワースコーヴ,,ok_mare_fallback,2017105130,,ok,recruitment price unresolved
+517,キューの2017,ベルクハイム,,no_candidate,,,,netkeiba mapping candidate not found
+520,ジャッキーテーストの2017,エクスプレッサー,,no_candidate,,,,netkeiba mapping candidate not found
+525,マルティンスタークの2017,リグージェ,,no_candidate,,,,netkeiba mapping candidate not found
+526,スルーレートの2017,タイダルフォース,,no_candidate,,,,netkeiba mapping candidate not found
+528,ユールフェストの2017,ユールファーナ,,no_candidate,,,,netkeiba mapping candidate not found
+529,ディアデラノビアの2017,グレイトオーサー,,no_candidate,,,,netkeiba mapping candidate not found
+532,カロンセギュールの2017,マクラーレンベール,,ok_mare_fallback,2017105278,2000.0,ok,birthday mismatch seed=2017-04-17 detail=2017-04-18
+534,タイトルパートの2017,リーディングパート,,ok_name_search,2017105410,,ok,recruitment price unresolved
+537,クリソプレーズの2017,ヴァーダイト,,ok_mare_fallback,2017105293,12000.0,ok,birthday mismatch seed=2017-02-17 detail=2017-02-18
+541,ファッションプレートの2017,クレイジーキルト,,ok_name_search,2017105503,,ok,recruitment price unresolved
+542,ディアマイベイビーの2017,キングサーガ,,no_candidate,,,,netkeiba mapping candidate not found
+543,レディシャツィの2017,ナスタチューム,,ok_name_search,2017105165,,ok,recruitment price unresolved
+546,グランデアモーレの2017,グランデマーレ,,no_candidate,,,,netkeiba mapping candidate not found
+547,ローズノーブルの2017,ジュビリーヘッド,,ok_mare_fallback,2017105661,,ok,recruitment price unresolved
+550,バッシフローラの2017,デイトライン,,no_candidate,,,,netkeiba mapping candidate not found
+551,フォンタネリーチェの2017,サンテルノ,,ok_mare_fallback,2017105511,,ok,recruitment price unresolved
+552,リトルディッパーの2017,フェルカド,,ok_mare_fallback,2017104967,,ok,recruitment price unresolved
+553,ピューリティーの2017,ラインハイト,,ok_mare_fallback,2017105495,,ok,recruitment price unresolved
+554,アリテリテの2017,アルテフィーチェ,,no_candidate,,,,netkeiba mapping candidate not found
+559,ストールンハートの2017,タイズオブハート,,ok_mare_fallback,2017105390,,ok,recruitment price unresolved
+562,プリンセスカメリアの2017,アイスジェイド,,ok_mare_fallback,2017105619,2400.0,ok,birthday mismatch seed=2017-05-14 detail=2017-05-15 | legacy name corrected: アイスジェイド -> ヴォリアーモ
+563,マラコスダムブラダの2017,レシステンシア,,no_candidate,,,,netkeiba mapping candidate not found
+564,ピュアブリーゼの2017,ルヴァン,,ok_name_search,2017105493,,ok,recruitment price unresolved
+567,ヴェラブランカの2017,ヴェラアズール,,no_candidate,,,,netkeiba mapping candidate not found
+570,カラベルラティーナの2017,ケープオブストーム,,no_candidate,,,,netkeiba mapping candidate not found
+574,スネガエクスプレスの2017,チェルヴィーノ,,no_candidate,,,,netkeiba mapping candidate not found
+576,ザガールインザットソングの2017,アヴァンセヴェリテ,,no_candidate,,,,netkeiba mapping candidate not found

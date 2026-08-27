@@ -1,9 +1,9 @@
 {
   "rows": 10,
-  "mapped": 8,
-  "priced": 7,
-  "performance_ok": 8,
+  "mapped": 10,
+  "priced": 10,
+  "performance_ok": 10,
   "cutoff": "2022-08-23",
-  "all_prices_resolved": false,
-  "qc_rows": 3
+  "all_prices_resolved": true,
+  "qc_rows": 1
 }

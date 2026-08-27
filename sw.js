@@ -1,4 +1,4 @@
-const CACHE='carrot-tour-20260827-v10';
+const CACHE='carrot-tour-20260827-v11';
 const CORE=[
   './',
   './index.html',
@@ -39,7 +39,7 @@ async function networkFirst(request) {
     cache.put(request, fresh.clone());
     return fresh;
   } catch (e) {
-    return (await caches.match(request)) || (await caches.match('./index.html'));
+    return (await caches.match(request, {ignoreSearch:true})) || (await caches.match('./index.html', {ignoreSearch:true})) || (await caches.match('./', {ignoreSearch:true}));
   }
 }
 

@@ -44,6 +44,33 @@ FEMALE_FR = dict(intercept=91.25603170363792, height=1.4996296831516212,
                  chest=-0.5291931787123764, cannon=0.7667058136060534,
                  weight=0.7349729268598437, bdate=-0.2227147724047725)
 
+# Verified exceptions from official Carrot 2018 catalogue + netkeiba.
+# These are keyed by carrot1124 source_no and used only when automatic mapping/price fails.
+VERIFIED_OVERRIDES = {
+    "501": {
+        "horse_id": "2017105181",
+        "horse_name": "サクセッション",
+        "price_man_yen": 5000.0,
+        "price_source": "Carrot official 2018 catalogue / netkeiba horse top",
+        "note": "アディクティドの17",
+    },
+    "503": {
+        "horse_id": "2017105543",
+        "horse_name": "バンデアミール",
+        "price_man_yen": 4000.0,
+        "price_source": "Carrot official 2018 catalogue / netkeiba horse top",
+        "note": "source correction: ベルレンケッテ→ペルレンケッテ",
+    },
+    "504": {
+        "horse_id": "2017105657",
+        "horse_name": "エルサフィーロ",
+        "price_man_yen": 4400.0,
+        "price_source": "Carrot official 2018 catalogue",
+        "note": "netkeiba current horse page lacks recruitment info",
+    },
+}
+
+
 def norm(s):
     s = "" if s is None else str(s)
     s = unicodedata.normalize("NFKC", s)
@@ -490,14 +517,25 @@ def main():
             "qc_notes": [],
         })
         try:
-            best, map_status, candidates = find_horse(fetcher, seed)
-            row["mapping_status"] = map_status
-            if best is None:
-                row["qc_notes"].append("netkeiba mapping candidate not found")
-                out.append(row)
-                continue
+            override = VERIFIED_OVERRIDES.get(str(seed["source_no"]))
+            if override:
+                hid = override["horse_id"]
+                mapped_name = override["horse_name"]
+                horse_url = f"{BASE}/horse/{hid}/"
+                match_text = override.get("note", "")
+                candidates = [(99, mapped_name, hid, horse_url, match_text)]
+                map_status = "ok_verified_override"
+                best = candidates[0]
+            else:
+                best, map_status, candidates = find_horse(fetcher, seed)
+                if best is None:
+                    row["mapping_status"] = map_status
+                    row["qc_notes"].append("netkeiba mapping candidate not found")
+                    out.append(row)
+                    continue
+                _, mapped_name, hid, horse_url, match_text = best
 
-            _, mapped_name, hid, horse_url, match_text = best
+            row["mapping_status"] = map_status
             row["horse_id"] = hid
             row["horse_url"] = horse_url
             row["mapping_candidates"] = [
@@ -520,6 +558,10 @@ def main():
                 if p is not None:
                     row["price_man_yen"] = p
                     row["price_source"] = purl
+                elif override and override.get("price_man_yen") is not None:
+                    row["price_man_yen"] = override["price_man_yen"]
+                    row["price_source"] = override["price_source"]
+                    row["qc_notes"].append("price filled from verified official catalogue fallback")
                 else:
                     row["qc_notes"].append("recruitment price unresolved")
 

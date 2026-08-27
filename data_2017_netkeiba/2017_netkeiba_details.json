@@ -17,22 +17,123 @@
     "legacy_classprize": "400",
     "cutoff": "2022-08-23",
     "pred_frweight": 487.9,
-    "mapping_status": "no_candidate",
-    "horse_id": "",
-    "horse_url": "",
-    "price_man_yen": null,
-    "price_source": "",
+    "mapping_status": "ok_mare_fallback",
+    "horse_id": "2017104315",
+    "horse_url": "https://db.netkeiba.com/horse/2017104315/",
+    "price_man_yen": 9000.0,
+    "price_source": "netkeiba_horse_top",
     "price_pct": null,
-    "price_pct_provisional": null,
-    "price_pct_status": "",
-    "starts_cutoff": null,
-    "wins_cutoff": null,
-    "earnings_cutoff_man_yen": null,
-    "win2plus": null,
-    "performance_status": "",
-    "qc_notes": [
-      "netkeiba mapping candidate not found"
-    ]
+    "price_pct_provisional": 0.8333333333333334,
+    "price_pct_status": "provisional_7_of_10",
+    "starts_cutoff": 12,
+    "wins_cutoff": 2,
+    "earnings_cutoff_man_yen": 2502.0,
+    "win2plus": 1,
+    "performance_status": "ok",
+    "qc_notes": [],
+    "mapping_candidates": [
+      {
+        "score": 10,
+        "name": "ブレッシングレイン",
+        "id": "2017104315",
+        "text": "2017 ブレッシングレイン セ ディープインパクト"
+      }
+    ],
+    "mapped_racehorse_name": "",
+    "detail_birthday": "2017-02-06",
+    "birthday_status": "ok",
+    "share_man_yen": 22.5,
+    "mouths": 400,
+    "current_central_earnings_man_yen": 3007.0,
+    "current_local_earnings_man_yen": 0.0,
+    "result_url": "https://db.netkeiba.com/horse/result/2017104315/",
+    "race_rows_cutoff": [
+      {
+        "date": "2022-06-04",
+        "meet": "3東京1",
+        "race": "障害3歳以上未勝利",
+        "rank": 1,
+        "prize_man_yen": 790.0
+      },
+      {
+        "date": "2022-03-20",
+        "meet": "2中山7",
+        "race": "4歳以上1勝クラス",
+        "rank": 15,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-10-16",
+        "meet": "5新潟3",
+        "race": "3歳以上1勝クラス",
+        "rank": 9,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-07-24",
+        "meet": "1函館7",
+        "race": "奥尻特別(1勝クラス)",
+        "rank": 11,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-05-16",
+        "meet": "2東京8",
+        "race": "4歳以上1勝クラス",
+        "rank": 4,
+        "prize_man_yen": 110.0
+      },
+      {
+        "date": "2021-04-10",
+        "meet": "3中山5",
+        "race": "4歳以上1勝クラス",
+        "rank": 5,
+        "prize_man_yen": 76.0
+      },
+      {
+        "date": "2021-01-31",
+        "meet": "1東京2",
+        "race": "4歳以上1勝クラス",
+        "rank": 4,
+        "prize_man_yen": 110.0
+      },
+      {
+        "date": "2021-01-11",
+        "meet": "1中山4",
+        "race": "4歳以上1勝クラス",
+        "rank": 2,
+        "prize_man_yen": 300.0
+      },
+      {
+        "date": "2020-10-18",
+        "meet": "4東京4",
+        "race": "3歳以上1勝クラス",
+        "rank": 5,
+        "prize_man_yen": 76.0
+      },
+      {
+        "date": "2020-09-06",
+        "meet": "3新潟8",
+        "race": "3歳以上1勝クラス",
+        "rank": 3,
+        "prize_man_yen": 190.0
+      },
+      {
+        "date": "2019-11-03",
+        "meet": "5東京2",
+        "race": "百日草特別(1勝クラス)",
+        "rank": 4,
+        "prize_man_yen": 150.0
+      },
+      {
+        "date": "2019-09-07",
+        "meet": "4中山1",
+        "race": "2歳新馬",
+        "rank": 1,
+        "prize_man_yen": 700.0
+      }
+    ],
+    "missing_prize_rows": []
   },
   {
     "source_no": "498",
@@ -52,22 +153,116 @@
     "legacy_classprize": "400",
     "cutoff": "2022-08-23",
     "pred_frweight": 450.1,
-    "mapping_status": "no_candidate",
-    "horse_id": "",
-    "horse_url": "",
-    "price_man_yen": null,
-    "price_source": "",
+    "mapping_status": "ok_name_search",
+    "horse_id": "2017105579",
+    "horse_url": "https://db.netkeiba.com/horse/2017105579/",
+    "price_man_yen": 10000.0,
+    "price_source": "netkeiba_horse_top",
     "price_pct": null,
-    "price_pct_provisional": null,
-    "price_pct_status": "",
-    "starts_cutoff": null,
-    "wins_cutoff": null,
-    "earnings_cutoff_man_yen": null,
-    "win2plus": null,
-    "performance_status": "",
-    "qc_notes": [
-      "netkeiba mapping candidate not found"
-    ]
+    "price_pct_provisional": 1.0,
+    "price_pct_status": "provisional_7_of_10",
+    "starts_cutoff": 11,
+    "wins_cutoff": 1,
+    "earnings_cutoff_man_yen": 1010.0,
+    "win2plus": 0,
+    "performance_status": "ok",
+    "qc_notes": [],
+    "mapping_candidates": [
+      {
+        "score": 13,
+        "name": "フォアシュピール",
+        "id": "2017105579",
+        "text": "フォアシュピール セ 2017 [血] [掲] [写] [東] 小笠倫弘 ディープインパクト ミュージカルロマンス Concorde's Tune キャロットファーム ノーザンファーム 1,010.0"
+      }
+    ],
+    "mapped_racehorse_name": "",
+    "detail_birthday": "2017-05-13",
+    "birthday_status": "ok",
+    "share_man_yen": 25.0,
+    "mouths": 400,
+    "current_central_earnings_man_yen": 1010.0,
+    "current_local_earnings_man_yen": 0.0,
+    "result_url": "https://db.netkeiba.com/horse/result/2017105579/",
+    "race_rows_cutoff": [
+      {
+        "date": "2022-03-26",
+        "meet": "3中山1",
+        "race": "4歳以上1勝クラス",
+        "rank": 10,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-11-13",
+        "meet": "2福島3",
+        "race": "3歳以上1勝クラス",
+        "rank": 15,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-08-28",
+        "meet": "2札幌5",
+        "race": "ニセコ特別(1勝クラス)",
+        "rank": 4,
+        "prize_man_yen": 160.0
+      },
+      {
+        "date": "2021-08-15",
+        "meet": "2札幌2",
+        "race": "3歳以上1勝クラス",
+        "rank": 7,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-06-26",
+        "meet": "3東京7",
+        "race": "3歳以上1勝クラス",
+        "rank": 12,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-02-20",
+        "meet": "1東京7",
+        "race": "4歳以上1勝クラス",
+        "rank": 15,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-12-13",
+        "meet": "5中山4",
+        "race": "3歳以上1勝クラス",
+        "rank": 10,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-08-22",
+        "meet": "2札幌3",
+        "race": "富良野特別(1勝クラス)",
+        "rank": 7,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-05-17",
+        "meet": "2東京8",
+        "race": "3歳1勝クラス",
+        "rank": 6,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-03-14",
+        "meet": "2中山5",
+        "race": "山桜賞(1勝クラス)",
+        "rank": 4,
+        "prize_man_yen": 150.0
+      },
+      {
+        "date": "2019-12-28",
+        "meet": "5中山9",
+        "race": "2歳新馬",
+        "rank": 1,
+        "prize_man_yen": 700.0
+      }
+    ],
+    "missing_prize_rows": []
   },
   {
     "source_no": "499",
@@ -87,22 +282,137 @@
     "legacy_classprize": "2900",
     "cutoff": "2022-08-23",
     "pred_frweight": 443.7,
-    "mapping_status": "no_candidate",
-    "horse_id": "",
-    "horse_url": "",
-    "price_man_yen": null,
-    "price_source": "",
+    "mapping_status": "ok_name_search",
+    "horse_id": "2017105485",
+    "horse_url": "https://db.netkeiba.com/horse/2017105485/",
+    "price_man_yen": 8000.0,
+    "price_source": "netkeiba_horse_top",
     "price_pct": null,
-    "price_pct_provisional": null,
-    "price_pct_status": "",
-    "starts_cutoff": null,
-    "wins_cutoff": null,
-    "earnings_cutoff_man_yen": null,
-    "win2plus": null,
-    "performance_status": "",
-    "qc_notes": [
-      "netkeiba mapping candidate not found"
-    ]
+    "price_pct_provisional": 0.6666666666666666,
+    "price_pct_status": "provisional_7_of_10",
+    "starts_cutoff": 14,
+    "wins_cutoff": 2,
+    "earnings_cutoff_man_yen": 7083.8,
+    "win2plus": 1,
+    "performance_status": "ok",
+    "qc_notes": [],
+    "mapping_candidates": [
+      {
+        "score": 13,
+        "name": "サンクテュエール",
+        "id": "2017105485",
+        "text": "サンクテュエール 牝 2017 [血] [繁] [掲] [写] [東] 田中博康 ディープインパクト ヒルダズパッション Canadian Frontier キャロットファーム ノーザンファーム 7,083.8"
+      }
+    ],
+    "mapped_racehorse_name": "",
+    "detail_birthday": "2017-02-13",
+    "birthday_status": "ok",
+    "share_man_yen": 20.0,
+    "mouths": 400,
+    "current_central_earnings_man_yen": 7083.0,
+    "current_local_earnings_man_yen": 0.0,
+    "result_url": "https://db.netkeiba.com/horse/result/2017105485/",
+    "race_rows_cutoff": [
+      {
+        "date": "2022-06-26",
+        "meet": "3東京8",
+        "race": "パラダイスS(L)",
+        "rank": 9,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2022-04-23",
+        "meet": "1福島3",
+        "race": "福島牝馬S(GIII)",
+        "rank": 13,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2022-02-19",
+        "meet": "1阪神3",
+        "race": "京都牝馬S(GIII)",
+        "rank": 5,
+        "prize_man_yen": 380.0
+      },
+      {
+        "date": "2021-12-18",
+        "meet": "5中山5",
+        "race": "ターコイズS(GIII)",
+        "rank": 13,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-10-16",
+        "meet": "4東京3",
+        "race": "アイルランド府中牝馬(GII)",
+        "rank": 8,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-06-20",
+        "meet": "3阪神2",
+        "race": "マーメイドS(GIII)",
+        "rank": 11,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-04-24",
+        "meet": "1新潟5",
+        "race": "福島牝馬S(GIII)",
+        "rank": 3,
+        "prize_man_yen": 958.2
+      },
+      {
+        "date": "2020-12-19",
+        "meet": "5中山5",
+        "race": "ターコイズS(GIII)",
+        "rank": 14,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-10-18",
+        "meet": "4京都4",
+        "race": "秋華賞(GI)",
+        "rank": 16,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-05-24",
+        "meet": "2東京10",
+        "race": "優駿牝馬(GI)",
+        "rank": 13,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-04-12",
+        "meet": "2阪神6",
+        "race": "桜花賞(GI)",
+        "rank": 6,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-01-12",
+        "meet": "1京都4",
+        "race": "日刊スポシンザン記念(GIII)",
+        "rank": 1,
+        "prize_man_yen": 3836.4
+      },
+      {
+        "date": "2019-10-26",
+        "meet": "4東京8",
+        "race": "アルテミスS(GIII)",
+        "rank": 2,
+        "prize_man_yen": 1209.2
+      },
+      {
+        "date": "2019-08-11",
+        "meet": "2新潟6",
+        "race": "2歳新馬",
+        "rank": 1,
+        "prize_man_yen": 700.0
+      }
+    ],
+    "missing_prize_rows": []
   },
   {
     "source_no": "500",
@@ -122,22 +432,67 @@
     "legacy_classprize": "0",
     "cutoff": "2022-08-23",
     "pred_frweight": 419.9,
-    "mapping_status": "no_candidate",
-    "horse_id": "",
-    "horse_url": "",
-    "price_man_yen": null,
-    "price_source": "",
+    "mapping_status": "ok_mare_fallback",
+    "horse_id": "2017105326",
+    "horse_url": "https://db.netkeiba.com/horse/2017105326/",
+    "price_man_yen": 7000.0,
+    "price_source": "netkeiba_horse_top",
     "price_pct": null,
-    "price_pct_provisional": null,
-    "price_pct_status": "",
-    "starts_cutoff": null,
-    "wins_cutoff": null,
-    "earnings_cutoff_man_yen": null,
-    "win2plus": null,
-    "performance_status": "",
-    "qc_notes": [
-      "netkeiba mapping candidate not found"
-    ]
+    "price_pct_provisional": 0.5,
+    "price_pct_status": "provisional_7_of_10",
+    "starts_cutoff": 4,
+    "wins_cutoff": 0,
+    "earnings_cutoff_man_yen": 0.0,
+    "win2plus": 0,
+    "performance_status": "ok",
+    "qc_notes": [],
+    "mapping_candidates": [
+      {
+        "score": 10,
+        "name": "アクニディ",
+        "id": "2017105326",
+        "text": "2017 アクニディ 牝 ディープインパクト"
+      }
+    ],
+    "mapped_racehorse_name": "",
+    "detail_birthday": "2017-02-16",
+    "birthday_status": "ok",
+    "share_man_yen": 17.5,
+    "mouths": 400,
+    "current_central_earnings_man_yen": 0.0,
+    "current_local_earnings_man_yen": 0.0,
+    "result_url": "https://db.netkeiba.com/horse/result/2017105326/",
+    "race_rows_cutoff": [
+      {
+        "date": "2020-09-05",
+        "meet": "3新潟7",
+        "race": "3歳未勝利",
+        "rank": 12,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-05-24",
+        "meet": "1新潟6",
+        "race": "3歳未勝利",
+        "rank": 11,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-02-29",
+        "meet": "2中山1",
+        "race": "3歳未勝利",
+        "rank": 11,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2019-12-08",
+        "meet": "5中山4",
+        "race": "2歳新馬",
+        "rank": 8,
+        "prize_man_yen": null
+      }
+    ],
+    "missing_prize_rows": []
   },
   {
     "source_no": "501",
@@ -164,7 +519,7 @@
     "price_source": "",
     "price_pct": null,
     "price_pct_provisional": null,
-    "price_pct_status": "",
+    "price_pct_status": "provisional_7_of_10",
     "starts_cutoff": null,
     "wins_cutoff": null,
     "earnings_cutoff_man_yen": null,
@@ -192,22 +547,109 @@
     "legacy_classprize": "3600",
     "cutoff": "2022-08-23",
     "pred_frweight": 438.9,
-    "mapping_status": "no_candidate",
-    "horse_id": "",
-    "horse_url": "",
-    "price_man_yen": null,
-    "price_source": "",
+    "mapping_status": "ok_name_search",
+    "horse_id": "2017105553",
+    "horse_url": "https://db.netkeiba.com/horse/2017105553/",
+    "price_man_yen": 3600.0,
+    "price_source": "netkeiba_horse_top",
     "price_pct": null,
-    "price_pct_provisional": null,
-    "price_pct_status": "",
-    "starts_cutoff": null,
-    "wins_cutoff": null,
-    "earnings_cutoff_man_yen": null,
-    "win2plus": null,
-    "performance_status": "",
-    "qc_notes": [
-      "netkeiba mapping candidate not found"
-    ]
+    "price_pct_provisional": 0.3333333333333333,
+    "price_pct_status": "provisional_7_of_10",
+    "starts_cutoff": 10,
+    "wins_cutoff": 5,
+    "earnings_cutoff_man_yen": 7603.1,
+    "win2plus": 1,
+    "performance_status": "ok",
+    "qc_notes": [],
+    "mapping_candidates": [
+      {
+        "score": 13,
+        "name": "アヌラーダプラ",
+        "id": "2017105553",
+        "text": "アヌラーダプラ 牝 2017 [血] [繁] [掲] [写] [東] 萩原清 キングカメハメハ ポロンナルワ Rahy キャロットファーム ノーザンファーム 7,603.1"
+      }
+    ],
+    "mapped_racehorse_name": "",
+    "detail_birthday": "2017-04-17",
+    "birthday_status": "ok",
+    "share_man_yen": 9.0,
+    "mouths": 400,
+    "current_central_earnings_man_yen": 7603.0,
+    "current_local_earnings_man_yen": 0.0,
+    "result_url": "https://db.netkeiba.com/horse/result/2017105553/",
+    "race_rows_cutoff": [
+      {
+        "date": "2022-07-31",
+        "meet": "2新潟2",
+        "race": "アイビスサマーD(GIII)",
+        "rank": 17,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-08-15",
+        "meet": "2札幌2",
+        "race": "UHB賞(OP)",
+        "rank": 1,
+        "prize_man_yen": 2335.0
+      },
+      {
+        "date": "2021-04-10",
+        "meet": "3中山5",
+        "race": "船橋S(3勝クラス)",
+        "rank": 1,
+        "prize_man_yen": 1855.7
+      },
+      {
+        "date": "2020-12-20",
+        "meet": "5中山6",
+        "race": "南総S(3勝クラス)",
+        "rank": 3,
+        "prize_man_yen": 465.1
+      },
+      {
+        "date": "2020-10-11",
+        "meet": "4新潟2",
+        "race": "北陸S(3勝クラス)",
+        "rank": 6,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-07-05",
+        "meet": "2函館2",
+        "race": "HTB杯(2勝クラス)",
+        "rank": 1,
+        "prize_man_yen": 1527.3
+      },
+      {
+        "date": "2020-03-15",
+        "meet": "1阪神6",
+        "race": "フィリーズレビュー(GII)",
+        "rank": 9,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-01-13",
+        "meet": "1中山5",
+        "race": "フェアリーS(GIII)",
+        "rank": 6,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2019-11-16",
+        "meet": "5東京5",
+        "race": "2歳1勝クラス",
+        "rank": 1,
+        "prize_man_yen": 720.0
+      },
+      {
+        "date": "2019-09-22",
+        "meet": "4中山7",
+        "race": "2歳新馬",
+        "rank": 1,
+        "prize_man_yen": 700.0
+      }
+    ],
+    "missing_prize_rows": []
   },
   {
     "source_no": "503",
@@ -234,7 +676,7 @@
     "price_source": "",
     "price_pct": null,
     "price_pct_provisional": null,
-    "price_pct_status": "",
+    "price_pct_status": "provisional_7_of_10",
     "starts_cutoff": null,
     "wins_cutoff": null,
     "earnings_cutoff_man_yen": null,
@@ -262,22 +704,349 @@
     "legacy_classprize": "0",
     "cutoff": "2022-08-23",
     "pred_frweight": 445.8,
-    "mapping_status": "no_candidate",
-    "horse_id": "",
-    "horse_url": "",
+    "mapping_status": "ok_mare_fallback",
+    "horse_id": "2017105657",
+    "horse_url": "https://db.netkeiba.com/horse/2017105657/",
     "price_man_yen": null,
     "price_source": "",
     "price_pct": null,
     "price_pct_provisional": null,
-    "price_pct_status": "",
-    "starts_cutoff": null,
-    "wins_cutoff": null,
-    "earnings_cutoff_man_yen": null,
-    "win2plus": null,
-    "performance_status": "",
+    "price_pct_status": "provisional_7_of_10",
+    "starts_cutoff": 44,
+    "wins_cutoff": 10,
+    "earnings_cutoff_man_yen": 1079.5,
+    "win2plus": 1,
+    "performance_status": "ok",
     "qc_notes": [
-      "netkeiba mapping candidate not found"
-    ]
+      "recruitment price unresolved"
+    ],
+    "mapping_candidates": [
+      {
+        "score": 10,
+        "name": "エルサフィーロ",
+        "id": "2017105657",
+        "text": "2017 エルサフィーロ 牡 ロードカナロア"
+      }
+    ],
+    "mapped_racehorse_name": "",
+    "detail_birthday": "2017-04-01",
+    "birthday_status": "ok",
+    "share_man_yen": null,
+    "mouths": null,
+    "current_central_earnings_man_yen": 0.0,
+    "current_local_earnings_man_yen": 1079.0,
+    "result_url": "https://db.netkeiba.com/horse/result/2017105657/",
+    "race_rows_cutoff": [
+      {
+        "date": "2022-08-16",
+        "meet": "盛岡",
+        "race": "納涼特別(A)",
+        "rank": 6,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2022-08-02",
+        "meet": "盛岡",
+        "race": "朝顔特別(A)",
+        "rank": null,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2022-03-27",
+        "meet": "高知",
+        "race": "Aー2",
+        "rank": 9,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2022-03-13",
+        "meet": "高知",
+        "race": "Aー4",
+        "rank": 9,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2022-02-27",
+        "meet": "高知",
+        "race": "ウマ娘アプリ一年特別(A)",
+        "rank": 9,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2022-02-13",
+        "meet": "高知",
+        "race": "AB混合",
+        "rank": 11,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2022-01-30",
+        "meet": "高知",
+        "race": "AB混合",
+        "rank": 8,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2022-01-16",
+        "meet": "高知",
+        "race": "大高坂賞(重賞)",
+        "rank": 12,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-12-31",
+        "meet": "高知",
+        "race": "Aー2",
+        "rank": 7,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-12-05",
+        "meet": "高知",
+        "race": "高知県山茶花特別(A)",
+        "rank": 6,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-11-07",
+        "meet": "高知",
+        "race": "黒潮マイルチャンピオ(重賞)",
+        "rank": 7,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-10-24",
+        "meet": "高知",
+        "race": "第2回しまね和牛特別(AB)",
+        "rank": 7,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-10-09",
+        "meet": "高知",
+        "race": "Aー2",
+        "rank": 5,
+        "prize_man_yen": 14.0
+      },
+      {
+        "date": "2021-09-20",
+        "meet": "高知",
+        "race": "Aー2",
+        "rank": 3,
+        "prize_man_yen": 28.0
+      },
+      {
+        "date": "2021-09-04",
+        "meet": "高知",
+        "race": "Aー2",
+        "rank": 3,
+        "prize_man_yen": 28.0
+      },
+      {
+        "date": "2021-08-22",
+        "meet": "高知",
+        "race": "Aー2",
+        "rank": 3,
+        "prize_man_yen": 28.0
+      },
+      {
+        "date": "2021-07-31",
+        "meet": "高知",
+        "race": "Aー2",
+        "rank": 3,
+        "prize_man_yen": 28.0
+      },
+      {
+        "date": "2021-07-18",
+        "meet": "高知",
+        "race": "Aー2",
+        "rank": 2,
+        "prize_man_yen": 49.0
+      },
+      {
+        "date": "2021-07-04",
+        "meet": "高知",
+        "race": "Aー2",
+        "rank": 3,
+        "prize_man_yen": 28.0
+      },
+      {
+        "date": "2021-06-20",
+        "meet": "高知",
+        "race": "AB混合",
+        "rank": 1,
+        "prize_man_yen": 140.0
+      },
+      {
+        "date": "2021-05-29",
+        "meet": "高知",
+        "race": "丸塚池特別(B)",
+        "rank": 8,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2021-05-16",
+        "meet": "高知",
+        "race": "白髪山特別(B)",
+        "rank": 2,
+        "prize_man_yen": 56.0
+      },
+      {
+        "date": "2021-05-02",
+        "meet": "高知",
+        "race": "Bー2",
+        "rank": 1,
+        "prize_man_yen": 100.0
+      },
+      {
+        "date": "2021-04-17",
+        "meet": "高知",
+        "race": "Bー2",
+        "rank": 5,
+        "prize_man_yen": 10.0
+      },
+      {
+        "date": "2021-03-30",
+        "meet": "高知",
+        "race": "Bー2",
+        "rank": 2,
+        "prize_man_yen": 31.5
+      },
+      {
+        "date": "2021-03-17",
+        "meet": "高知",
+        "race": "桜ヶ丘公園特別(C1)",
+        "rank": 1,
+        "prize_man_yen": 90.0
+      },
+      {
+        "date": "2021-03-02",
+        "meet": "高知",
+        "race": "四万十ポーク特別(C1)",
+        "rank": 1,
+        "prize_man_yen": 70.0
+      },
+      {
+        "date": "2021-02-24",
+        "meet": "高知",
+        "race": "C1ー3",
+        "rank": 4,
+        "prize_man_yen": 10.5
+      },
+      {
+        "date": "2021-02-07",
+        "meet": "高知",
+        "race": "晩冬特別(C2)",
+        "rank": 1,
+        "prize_man_yen": 80.0
+      },
+      {
+        "date": "2021-01-24",
+        "meet": "高知",
+        "race": "片桐いつき誕生日特別(C2)",
+        "rank": 1,
+        "prize_man_yen": 60.0
+      },
+      {
+        "date": "2021-01-11",
+        "meet": "高知",
+        "race": "ヤブツバキ特別(C3)",
+        "rank": 2,
+        "prize_man_yen": 24.5
+      },
+      {
+        "date": "2020-12-27",
+        "meet": "高知",
+        "race": "ポインセチア特別(C3)",
+        "rank": 5,
+        "prize_man_yen": 7.0
+      },
+      {
+        "date": "2020-12-13",
+        "meet": "高知",
+        "race": "C3ー8",
+        "rank": 1,
+        "prize_man_yen": 50.0
+      },
+      {
+        "date": "2020-11-29",
+        "meet": "高知",
+        "race": "カンラン特別(C3)",
+        "rank": 5,
+        "prize_man_yen": 5.0
+      },
+      {
+        "date": "2020-11-22",
+        "meet": "高知",
+        "race": "駒田京伽生誕祭特別(C3)",
+        "rank": 1,
+        "prize_man_yen": 40.0
+      },
+      {
+        "date": "2020-11-08",
+        "meet": "高知",
+        "race": "第2回重太郎特別(C3)",
+        "rank": 1,
+        "prize_man_yen": 40.0
+      },
+      {
+        "date": "2020-10-25",
+        "meet": "高知",
+        "race": "C3ー19",
+        "rank": 1,
+        "prize_man_yen": 40.0
+      },
+      {
+        "date": "2020-10-11",
+        "meet": "高知",
+        "race": "C3ー24",
+        "rank": 2,
+        "prize_man_yen": 14.0
+      },
+      {
+        "date": "2020-09-21",
+        "meet": "高知",
+        "race": "3歳ー5",
+        "rank": 3,
+        "prize_man_yen": 8.0
+      },
+      {
+        "date": "2020-08-15",
+        "meet": "3新潟1",
+        "race": "3歳未勝利",
+        "rank": 11,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-05-24",
+        "meet": "2東京10",
+        "race": "3歳未勝利",
+        "rank": 15,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-05-02",
+        "meet": "2東京3",
+        "race": "3歳未勝利",
+        "rank": 6,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-03-01",
+        "meet": "2中山2",
+        "race": "3歳未勝利",
+        "rank": 14,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2019-10-21",
+        "meet": "4東京4",
+        "race": "2歳新馬",
+        "rank": 7,
+        "prize_man_yen": null
+      }
+    ],
+    "missing_prize_rows": []
   },
   {
     "source_no": "505",
@@ -297,22 +1066,74 @@
     "legacy_classprize": "0",
     "cutoff": "2022-08-23",
     "pred_frweight": 462.5,
-    "mapping_status": "no_candidate",
-    "horse_id": "",
-    "horse_url": "",
-    "price_man_yen": null,
-    "price_source": "",
+    "mapping_status": "ok_name_search",
+    "horse_id": "2017105559",
+    "horse_url": "https://db.netkeiba.com/horse/2017105559/",
+    "price_man_yen": 2800.0,
+    "price_source": "netkeiba_horse_top",
     "price_pct": null,
-    "price_pct_provisional": null,
-    "price_pct_status": "",
-    "starts_cutoff": null,
-    "wins_cutoff": null,
-    "earnings_cutoff_man_yen": null,
-    "win2plus": null,
-    "performance_status": "",
-    "qc_notes": [
-      "netkeiba mapping candidate not found"
-    ]
+    "price_pct_provisional": 0.16666666666666666,
+    "price_pct_status": "provisional_7_of_10",
+    "starts_cutoff": 5,
+    "wins_cutoff": 0,
+    "earnings_cutoff_man_yen": 440.0,
+    "win2plus": 0,
+    "performance_status": "ok",
+    "qc_notes": [],
+    "mapping_candidates": [
+      {
+        "score": 13,
+        "name": "サクライロ",
+        "id": "2017105559",
+        "text": "サクライロ 牝 2017 [血] [掲] [写] [東] 木村哲也 ロードカナロア マチカネエンジイロ サンデーサイレンス キャロットファーム ノーザンファーム 440.0"
+      }
+    ],
+    "mapped_racehorse_name": "",
+    "detail_birthday": "2017-03-04",
+    "birthday_status": "ok",
+    "share_man_yen": 7.0,
+    "mouths": 400,
+    "current_central_earnings_man_yen": 440.0,
+    "current_local_earnings_man_yen": 0.0,
+    "result_url": "https://db.netkeiba.com/horse/result/2017105559/",
+    "race_rows_cutoff": [
+      {
+        "date": "2020-08-30",
+        "meet": "2札幌6",
+        "race": "3歳未勝利",
+        "rank": 15,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2020-08-15",
+        "meet": "2札幌1",
+        "race": "3歳未勝利",
+        "rank": 3,
+        "prize_man_yen": 130.0
+      },
+      {
+        "date": "2020-05-10",
+        "meet": "1新潟2",
+        "race": "3歳未勝利",
+        "rank": 3,
+        "prize_man_yen": 130.0
+      },
+      {
+        "date": "2020-01-25",
+        "meet": "1中山8",
+        "race": "3歳未勝利",
+        "rank": 10,
+        "prize_man_yen": null
+      },
+      {
+        "date": "2019-12-01",
+        "meet": "5中山2",
+        "race": "2歳新馬",
+        "rank": 3,
+        "prize_man_yen": 180.0
+      }
+    ],
+    "missing_prize_rows": []
   },
   {
     "source_no": "506",
@@ -332,21 +1153,45 @@
     "legacy_classprize": "0",
     "cutoff": "2022-08-23",
     "pred_frweight": 439.8,
-    "mapping_status": "no_candidate",
-    "horse_id": "",
-    "horse_url": "",
-    "price_man_yen": null,
-    "price_source": "",
+    "mapping_status": "ok_mare_fallback",
+    "horse_id": "2017105242",
+    "horse_url": "https://db.netkeiba.com/horse/2017105242/",
+    "price_man_yen": 2600.0,
+    "price_source": "netkeiba_horse_top",
     "price_pct": null,
-    "price_pct_provisional": null,
-    "price_pct_status": "",
-    "starts_cutoff": null,
-    "wins_cutoff": null,
-    "earnings_cutoff_man_yen": null,
-    "win2plus": null,
-    "performance_status": "",
-    "qc_notes": [
-      "netkeiba mapping candidate not found"
-    ]
+    "price_pct_provisional": 0.0,
+    "price_pct_status": "provisional_7_of_10",
+    "starts_cutoff": 1,
+    "wins_cutoff": 0,
+    "earnings_cutoff_man_yen": 0.0,
+    "win2plus": 0,
+    "performance_status": "ok",
+    "qc_notes": [],
+    "mapping_candidates": [
+      {
+        "score": 10,
+        "name": "カドーダンジュ",
+        "id": "2017105242",
+        "text": "2017 カドーダンジュ 牝 ロードカナロア"
+      }
+    ],
+    "mapped_racehorse_name": "",
+    "detail_birthday": "2017-03-14",
+    "birthday_status": "ok",
+    "share_man_yen": 6.5,
+    "mouths": 400,
+    "current_central_earnings_man_yen": 0.0,
+    "current_local_earnings_man_yen": 0.0,
+    "result_url": "https://db.netkeiba.com/horse/result/2017105242/",
+    "race_rows_cutoff": [
+      {
+        "date": "2020-07-25",
+        "meet": "1札幌1",
+        "race": "3歳未勝利",
+        "rank": 14,
+        "prize_man_yen": null
+      }
+    ],
+    "missing_prize_rows": []
   }
 ]

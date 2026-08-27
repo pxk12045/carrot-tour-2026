@@ -21,7 +21,7 @@ import time
 import unicodedata
 from datetime import datetime, date
 from pathlib import Path
-from urllib.parse import urljoin
+from urllib.parse import urljoin, quote_from_bytes
 
 import requests
 from bs4 import BeautifulSoup
@@ -98,49 +98,130 @@ class Fetcher:
 def soup_bytes(resp):
     return BeautifulSoup(resp.content, "lxml", from_encoding="EUC-JP")
 
-def find_horse_by_dam(fetcher, row):
-    # Query by dam; this avoids legacy-name duplication/mis-mapping.
-    params = {"pid": "horse_list", "mare": row["dam"], "range": "all"}
-    r = fetcher.get(SEARCH_URL, params=params)
-    soup = soup_bytes(r)
+def eucjp_quote(value: str) -> str:
+    """netkeiba DB classic search expects Japanese query strings in EUC-JP."""
+    return quote_from_bytes(str(value).encode("euc_jp", errors="ignore"), safe="")
 
-    candidates = []
-    horse_re = re.compile(r"/horse/(\d{10})/?$")
+def horse_search_url(word: str) -> str:
+    # Historical/current classic endpoint. ml=1/range=1 = horse name search.
+    return (
+        f"{BASE}/index.php?pid=horse_list&ml=1&range=1"
+        f"&word={eucjp_quote(word)}"
+    )
+
+def parse_horse_list_rows(soup):
+    out = []
+    # IDs may be domestic 10 digits or imported mare IDs like 000a011d05.
+    horse_re = re.compile(r"/horse/([0-9A-Za-z]{10})/?(?:[?#].*)?$")
     for tr in soup.find_all("tr"):
-        a = None
-        for link in tr.find_all("a", href=True):
-            if horse_re.search(link["href"]):
-                a = link
-                break
-        if not a:
-            continue
         text = tr.get_text(" ", strip=True)
-        href = urljoin(BASE, a["href"])
-        m = horse_re.search(a["href"])
-        if not m:
+        horse_link = None
+        for a in tr.find_all("a", href=True):
+            m = horse_re.search(a["href"])
+            if m:
+                horse_link = (a, m.group(1))
+                break
+        if not horse_link:
             continue
-        hid = m.group(1)
-        # Strong filters: birth year + dam. Sire is a tie-breaker.
-        if "2017" not in text:
-            continue
-        if norm(row["dam"]) not in norm(text):
-            continue
-        score = 0
-        if norm(row["sire"]) in norm(text):
-            score += 4
-        if norm(row["legacy_racehorse_name"]) == norm(a.get_text(" ", strip=True)):
-            score += 2
-        if "キャロットファーム" in text:
-            score += 1
-        candidates.append((score, a.get_text(" ", strip=True), hid, href, text))
+        a, hid = horse_link
+        out.append({
+            "name": a.get_text(" ", strip=True),
+            "id": hid,
+            "url": urljoin(BASE, a["href"]),
+            "text": text,
+        })
+    return out
 
+def search_by_horse_name(fetcher, row):
+    """Search legacy horse name, then validate year + dam + sire in the result row."""
+    r = fetcher.get(horse_search_url(row["legacy_racehorse_name"]))
+    soup = soup_bytes(r)
+    candidates = []
+    for c in parse_horse_list_rows(soup):
+        t = norm(c["text"])
+        if "2017" not in c["text"]:
+            continue
+        if norm(row["dam"]) not in t:
+            continue
+        if norm(row["sire"]) not in t:
+            continue
+        score = 10
+        if norm(c["name"]) == norm(row["legacy_racehorse_name"]):
+            score += 2
+        if "キャロットファーム" in c["text"]:
+            score += 1
+        candidates.append((score, c["name"], c["id"], c["url"], c["text"]))
     candidates.sort(reverse=True, key=lambda x: x[0])
+    return candidates
+
+def find_dam_pages(fetcher, dam_name):
+    """Search the dam as a horse name; return exact-name candidate horse pages."""
+    r = fetcher.get(horse_search_url(dam_name))
+    soup = soup_bytes(r)
+    rows = parse_horse_list_rows(soup)
+    exact = [x for x in rows if norm(x["name"]) == norm(dam_name)]
+    return exact or rows[:5]
+
+def offspring_from_mare_page(fetcher, dam_id, row):
+    """Use the dam's netkeiba mare page as a robust fallback."""
+    url = f"{BASE}/horse/mare/{dam_id}/"
+    r = fetcher.get(url)
+    soup = soup_bytes(r)
+    horse_re = re.compile(r"/horse/([0-9]{10})/?(?:[?#].*)?$")
+    candidates = []
+    for tr in soup.find_all("tr"):
+        txt = tr.get_text(" ", strip=True)
+        if "2017" not in txt:
+            continue
+        if norm(row["sire"]) not in norm(txt):
+            continue
+        for a in tr.find_all("a", href=True):
+            m = horse_re.search(a["href"])
+            if not m:
+                continue
+            hid = m.group(1)
+            name = a.get_text(" ", strip=True)
+            score = 8
+            if norm(name) == norm(row["legacy_racehorse_name"]):
+                score += 2
+            candidates.append((score, name, hid, urljoin(BASE, a["href"]), txt))
+            break
+    candidates.sort(reverse=True, key=lambda x: x[0])
+    return candidates
+
+def find_horse(fetcher, row):
+    # A. Fast path: legacy racehorse name, but validate against dam+sire+year.
+    candidates = search_by_horse_name(fetcher, row)
+    if candidates:
+        best = candidates[0]
+        status = "ok_name_search"
+        if len(candidates) > 1 and candidates[0][0] == candidates[1][0]:
+            status = "ambiguous_name_search"
+        return best, status, candidates[:5]
+
+    # B. Robust fallback: locate dam page, then read her 2017 offspring by sire.
+    mare_candidates = find_dam_pages(fetcher, row["dam"])
+    all_offspring = []
+    for mare in mare_candidates[:3]:
+        try:
+            cs = offspring_from_mare_page(fetcher, mare["id"], row)
+            all_offspring.extend(cs)
+        except Exception:
+            continue
+
+    # Deduplicate by child horse id.
+    dedup = {}
+    for c in all_offspring:
+        if c[2] not in dedup or c[0] > dedup[c[2]][0]:
+            dedup[c[2]] = c
+    candidates = sorted(dedup.values(), reverse=True, key=lambda x: x[0])
     if not candidates:
         return None, "no_candidate", []
     best = candidates[0]
+    status = "ok_mare_fallback"
     if len(candidates) > 1 and candidates[0][0] == candidates[1][0]:
-        return best, "ambiguous", candidates[:5]
-    return best, "ok", candidates[:5]
+        status = "ambiguous_mare_fallback"
+    return best, status, candidates[:5]
 
 def parse_detail(fetcher, horse_url, seed_birthday):
     r = fetcher.get(horse_url)
@@ -409,7 +490,7 @@ def main():
             "qc_notes": [],
         })
         try:
-            best, map_status, candidates = find_horse_by_dam(fetcher, seed)
+            best, map_status, candidates = find_horse(fetcher, seed)
             row["mapping_status"] = map_status
             if best is None:
                 row["qc_notes"].append("netkeiba mapping candidate not found")
@@ -489,7 +570,7 @@ def main():
         w = csv.DictWriter(f, fieldnames=qfields, extrasaction="ignore")
         w.writeheader()
         for r in out:
-            if r.get("qc_notes") or r.get("mapping_status") != "ok" or r.get("price_man_yen") is None:
+            if r.get("qc_notes") or not str(r.get("mapping_status","")).startswith("ok_") or r.get("price_man_yen") is None:
                 rr = dict(r)
                 rr["qc_notes"] = " | ".join(rr.get("qc_notes", []))
                 w.writerow(rr)

@@ -104,12 +104,15 @@ function buildList(mode){
    mode==='stars'?scope.filter(h=>loadState(h.no).star):
    mode==='waveSoftGood'?scope.filter(h=>effectiveVideoRating(h.no,'うねり・柔らかさ')===1):
    scope;
- hs=[...hs].sort((a,b)=>a.rank-b.rank);
+ // 基本は募集番号順。例外は「会場順位」だけ指数ランク順。
+ if(mode==='venueList') hs=[...hs].sort((a,b)=>a.rank-b.rank);
+ else hs=[...hs].sort((a,b)=>Number(a.no)-Number(b.no));
  hs.forEach(h=>appendCard(h));
 }
 function appendCard(h){
  const c=document.createElement('div');c.className='list-card';c.dataset.search=`${h.no} ${h.name} ${h.sire} ${h.dam} ${h.bms} ${h.trainer}`.toLowerCase();
- c.innerHTML=`<div class="rankbadge ${tierClass(h)}">#${h.rank}</div><div><div class="lname">No.${h.no} ${safeText(displayName(h))} ${videoLink(h)}</div><div class="lsub">${safeText(h.sire)} / 母 ${safeText(h.dam)} / ${safeText(h.trainer)}</div></div><div class="lright">v3 ${h.score.toFixed(1)}<br>FR ${Math.round(h.predFR)}kg</div>`;
+ const starred=!!loadState(h.no).star;
+ c.innerHTML=`<div class="rankbadge noheat${starred?' starred-no':''}" style="background:${rankHeatColor(h)}" title="募集No.${h.no} / 総合${h.rank}位" aria-label="${starred?'★':''}募集No.${h.no} 総合${h.rank}位">${starred?'<span class="list-star">★</span>':''}<span>${h.no}</span></div><div><div class="lname">No.${h.no} ${safeText(displayName(h))} ${videoLink(h)}</div><div class="lsub">${safeText(h.sire)} / 母 ${safeText(h.dam)} / ${safeText(h.trainer)}</div></div><div class="lright">v3 ${h.score.toFixed(1)}<br>FR ${Math.round(h.predFR)}kg</div>`;
  c.onclick=()=>openHorse(h.no);$('list').appendChild(c)
 }
 function syncViewButtons(){
@@ -247,8 +250,8 @@ $('fcls').onclick=()=>{factorMode='cls';$('fcls').classList.add('active');$('fre
 $('star').onclick=()=>{
  const s=loadState(current.no);s.star=!s.star;saveState(current.no,s);
  $('star').textContent=s.star?'★':'☆';$('star').classList.toggle('on',!!s.star);
- if(view==='stars') buildList('stars');
  if(view==='map') renderMap();
+ else buildList(view);
 }
 $('memo').oninput=e=>{if(!current)return;const s=loadState(current.no);s.memo=e.target.value;saveState(current.no,s)}
 function closeSheet(){$('sheet').classList.remove('open');$('sheetbg').classList.remove('open')}
@@ -319,7 +322,7 @@ function exportJsonObject(){
  });
  return {
    format:'carrot-tour-local-backup',
-   version:12,
+   version:13,
    season:2026,
    stateKeyPrefix:'carrot2026_',
    exportedAt:new Date().toISOString(),

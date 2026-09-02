@@ -253,6 +253,117 @@ $('star').onclick=()=>{
 $('memo').oninput=e=>{if(!current)return;const s=loadState(current.no);s.memo=e.target.value;saveState(current.no,s)}
 function closeSheet(){$('sheet').classList.remove('open');$('sheetbg').classList.remove('open')}
 $('close').onclick=closeSheet;$('sheetbg').onclick=closeSheet;
+
+const EXPORT_VIDEO_KEYS=['前進気勢','首差し','力強さ','うねり・柔らかさ','足捌き'];
+function ratingLabel(v){return v===1?'◎':v===0?'〇':v===-1?'△':'—'}
+function savedStateEntries(){
+ return H.map(h=>({horse:h,state:loadState(h.no)}));
+}
+function exportCounts(){
+ let memo=0,star=0,videoChanged=0,any=0;
+ savedStateEntries().forEach(({state})=>{
+   const hasMemo=String(state.memo||'').trim().length>0;
+   const hasStar=!!state.star;
+   const ve=state.videoEval||{};
+   const hasVideo=Object.keys(ve).some(k=>Object.prototype.hasOwnProperty.call(ve,k));
+   if(hasMemo)memo++;
+   if(hasStar)star++;
+   if(hasVideo)videoChanged++;
+   if(hasMemo||hasStar||hasVideo)any++;
+ });
+ return {memo,star,videoChanged,any};
+}
+function updateExportSummary(){
+ const c=exportCounts();
+ $('exportSummary').textContent=`保存あり ${c.any}頭 ／ コメント ${c.memo}頭 ／ ★ ${c.star}頭 ／ 動画評価変更 ${c.videoChanged}頭`;
+}
+function openExport(){
+ updateExportSummary();
+ $('exportStatus').textContent='';
+ $('exportPanel').classList.add('open');
+ $('exportBg').classList.add('open');
+}
+function closeExport(){
+ $('exportPanel').classList.remove('open');
+ $('exportBg').classList.remove('open');
+}
+function csvCell(v){
+ const s=String(v??'');
+ return /[",\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;
+}
+function exportCsvText(){
+ const headers=['No','募集馬名','会場','v3順位','v3指数','★','コメント',...EXPORT_VIDEO_KEYS,'動画評価変更項目'];
+ const lines=[headers.map(csvCell).join(',')];
+ [...H].sort((a,b)=>Number(a.no)-Number(b.no)).forEach(h=>{
+   const st=loadState(h.no), saved=st.videoEval||{};
+   const changed=EXPORT_VIDEO_KEYS.filter(k=>Object.prototype.hasOwnProperty.call(saved,k)).join(' / ');
+   const vals=[
+     h.no,h.name,(V.find(v=>v.id===h.venue)||{}).label||h.venue,h.rank,h.score.toFixed(1),
+     st.star?'★':'',st.memo||'',
+     ...EXPORT_VIDEO_KEYS.map(k=>ratingLabel(effectiveVideoRating(h.no,k))),
+     changed
+   ];
+   lines.push(vals.map(csvCell).join(','));
+ });
+ return '\ufeff'+lines.join('\r\n');
+}
+function exportJsonObject(){
+ const states={};
+ [...H].sort((a,b)=>Number(a.no)-Number(b.no)).forEach(h=>{
+   const raw=loadState(h.no);
+   states[String(h.no)]={
+     name:h.name,
+     state:raw,
+     effectiveVideoEval:Object.fromEntries(EXPORT_VIDEO_KEYS.map(k=>[k,effectiveVideoRating(h.no,k)]))
+   };
+ });
+ return {
+   format:'carrot-tour-local-backup',
+   version:12,
+   season:2026,
+   stateKeyPrefix:'carrot2026_',
+   exportedAt:new Date().toISOString(),
+   horseCount:H.length,
+   counts:exportCounts(),
+   states
+ };
+}
+function fileStamp(){
+ const d=new Date(), p=n=>String(n).padStart(2,'0');
+ return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}`;
+}
+async function shareOrDownload(filename,mime,text){
+ const file=new File([text],filename,{type:mime});
+ try{
+   if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+     await navigator.share({files:[file],title:filename});
+     return '共有シートを開きました。「ファイルに保存」などを選べます。';
+   }
+ }catch(e){
+   if(e && e.name==='AbortError') return '共有をキャンセルしました。';
+ }
+ const blob=new Blob([text],{type:mime});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),30000);
+ return 'ファイルを書き出しました。';
+}
+$('exportOpen').onclick=openExport;
+$('exportClose').onclick=closeExport;
+$('exportCloseX').onclick=closeExport;
+$('exportBg').onclick=closeExport;
+$('exportCsv').onclick=async()=>{
+ $('exportStatus').textContent='CSVを準備中…';
+ const msg=await shareOrDownload(`carrot-tour-2026_${fileStamp()}.csv`,'text/csv;charset=utf-8',exportCsvText());
+ $('exportStatus').textContent=msg;
+};
+$('exportJson').onclick=async()=>{
+ $('exportStatus').textContent='JSONバックアップを準備中…';
+ const text=JSON.stringify(exportJsonObject(),null,2);
+ const msg=await shareOrDownload(`carrot-tour-2026_backup_${fileStamp()}.json`,'application/json;charset=utf-8',text);
+ $('exportStatus').textContent=msg;
+};
+
 function renderAll(){
  if(isAllScope() && view==='map') view='venueList';
  renderVenueTabs();renderHeader();syncViewButtons();

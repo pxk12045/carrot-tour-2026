@@ -1,16 +1,16 @@
-const CACHE='carrot-tour-20260827-v11';
+const CACHE='carrot-tour-20260902-v11';
 const CORE=[
   './',
   './index.html',
-  './style.css?v=20260827-v10',
-  './app.js?v=20260827-v10',
-  './horses.js?v=20260827-v10',
-  './video-evaluation.js?v=20260827-v10',
-  './family-data.js?v=20260827-v10',
-  './surgery-data.js?v=20260827-v10',
-  './tour-extra-data.js?v=20260827-v10',
-  './reference-data.js?v=20260827-v10',
-  './manifest.webmanifest?v=20260827-v10',
+  './style.css?v=20260902-v11',
+  './app.js?v=20260902-v11',
+  './horses.js?v=20260902-v11',
+  './video-evaluation.js?v=20260902-v11',
+  './family-data.js?v=20260902-v11',
+  './surgery-data.js?v=20260902-v11',
+  './tour-extra-data.js?v=20260902-v11',
+  './reference-data.js?v=20260902-v11',
+  './manifest.webmanifest?v=20260902-v11',
   './icon-180.png',
   './icon-512.png',
   './map-shiraoi.jpg',
@@ -39,7 +39,7 @@ async function networkFirst(request) {
     cache.put(request, fresh.clone());
     return fresh;
   } catch (e) {
-    return (await caches.match(request, {ignoreSearch:true})) || (await caches.match('./index.html', {ignoreSearch:true})) || (await caches.match('./', {ignoreSearch:true}));
+    return (await caches.match(request)) || (await caches.match('./index.html'));
   }
 }
 

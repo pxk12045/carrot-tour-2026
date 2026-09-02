@@ -50,6 +50,13 @@ function isAllScope(){return venue==='all'}
 function venueObj(){return isAllScope()?null:V.find(v=>v.id===venue)}
 function currentVenueHorses(){return isAllScope()?H:H.filter(h=>h.venue===venue)}
 function tierClass(h){return h.tier}
+function rankHeatColor(h){
+ const n=Math.max(2,H.length);
+ const t=Math.max(0,Math.min(1,(Number(h.rank)-1)/(n-1)));
+ // 指数順位: 1位=赤 → 下位=青。順位そのものは配置図には表示しない。
+ const hue=220*t;
+ return `hsl(${hue.toFixed(0)} 78% 42%)`;
+}
 function renderVenueTabs(){
  $('venueTabs').innerHTML='';
  const scopes=[...V.map(v=>({id:v.id,label:v.label})),{id:'all',label:'全94頭'}];
@@ -77,7 +84,16 @@ function renderMap(){
  if(isAllScope()) return;
  const v=venueObj(), hs=currentVenueHorses();
  $('mapImg').src=v.image;$('mapStage').querySelectorAll('.marker').forEach(x=>x.remove());
- hs.forEach(h=>{const b=document.createElement('button');b.className='marker '+tierClass(h);b.style.left=h.x+'%';b.style.top=h.y+'%';b.innerHTML=`<span class="mn">${h.no}</span><span class="mr">#${h.rank}</span>`;b.onclick=()=>openHorse(h.no);$('mapStage').appendChild(b)});
+ hs.forEach(h=>{
+  const starred=!!loadState(h.no).star;
+  const b=document.createElement('button');
+  b.className='marker map-rank'+(starred?' starred':'');
+  b.style.left=h.x+'%';b.style.top=h.y+'%';b.style.background=rankHeatColor(h);
+  b.innerHTML=`${starred?'<span class="map-star">★</span>':''}<span class="mn">${h.no}</span>`;
+  b.setAttribute('aria-label',`${starred?'★':''}募集No.${h.no} 総合${h.rank}位`);
+  b.title=`${starred?'★ ':''}No.${h.no} / 総合${h.rank}位`;
+  b.onclick=()=>openHorse(h.no);$('mapStage').appendChild(b)
+ });
  $('topPicks').innerHTML='';
  [...hs].sort((a,b)=>a.rank-b.rank).slice(0,5).forEach((h,i)=>{const b=document.createElement('button');b.className='pick';b.textContent=`会場${i+1}位 No.${h.no} / 全体${h.rank}位`;b.onclick=()=>openHorse(h.no);$('topPicks').appendChild(b)})
 }
@@ -232,6 +248,7 @@ $('star').onclick=()=>{
  const s=loadState(current.no);s.star=!s.star;saveState(current.no,s);
  $('star').textContent=s.star?'★':'☆';$('star').classList.toggle('on',!!s.star);
  if(view==='stars') buildList('stars');
+ if(view==='map') renderMap();
 }
 $('memo').oninput=e=>{if(!current)return;const s=loadState(current.no);s.memo=e.target.value;saveState(current.no,s)}
 function closeSheet(){$('sheet').classList.remove('open');$('sheetbg').classList.remove('open')}

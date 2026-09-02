@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="CARROT TOUR">
-<link rel="manifest" href="manifest.webmanifest?v=20260903-v15">
+<link rel="manifest" href="manifest.webmanifest?v=20260903-v16">
 <link rel="apple-touch-icon" href="icon-180.png">
-<link rel="stylesheet" href="style.css?v=20260903-v15">
+<link rel="stylesheet" href="style.css?v=20260903-v16">
 <title>CARROT TOUR 2026</title>
 </head>
 <body>
@@ -45,7 +45,7 @@
     <div><div id="exportTitle" class="export-title">ツアーデータ保存</div><div id="exportSummary" class="export-summary"></div></div>
     <button id="exportCloseX" class="export-x" type="button" aria-label="閉じる">×</button>
   </div>
-  <div class="export-note">CSVは全94頭を一覧化。JSONは★・コメント・動画評価変更値をlocalStorageのまま保存するバックアップです。</div>
+  <div class="export-note">CSVは全94頭を一覧化。JSONは★・テンプレコメント・特記事項・動画評価変更値をlocalStorageのまま保存するバックアップです。</div>
   <div class="export-actions">
     <button id="exportCsv" class="export-btn primary" type="button">CSVを書き出す</button>
     <button id="exportJson" class="export-btn" type="button">JSONバックアップ</button>
@@ -113,14 +113,24 @@
    <div id="videoGrid" class="video-grid"></div>
    <div class="locked">初期値は添付評価表。◎ / 〇 / △ を選択すると、この端末に保存されます。</div>
  </div>
- <div class="memo"><textarea id="memo" placeholder="現地メモ（この端末だけに保存）"></textarea></div>
+ <div class="tour-template">
+   <div class="sectitle">現場コメント</div>
+   <div class="template-note">該当する項目をタップ。青色が選択中です。デビュー時期は1つ、その他は複数選択できます。</div>
+   <div class="template-group"><div class="template-label">距離</div><div id="tplDistance" class="template-buttons"></div></div>
+   <div class="template-group"><div class="template-label">コース</div><div id="tplCourse" class="template-buttons"></div></div>
+   <div class="template-group"><div class="template-label">性格・気性</div><div id="tplTemperament" class="template-buttons"></div></div>
+   <div class="template-group"><div class="template-label">デビュー時期</div><div id="tplDebut" class="template-buttons"></div></div>
+   <div class="template-group"><div class="template-label">将来目標</div><div id="tplTarget" class="template-buttons"></div></div>
+   <button id="tplClear" class="template-clear" type="button">テンプレ選択をクリア</button>
+ </div>
+ <div class="memo"><div class="memo-label">特記事項</div><textarea id="memo" placeholder="テンプレにない内容だけ入力（この端末に保存）"></textarea></div>
  <button id="close" class="close">閉じる</button>
 </div>
-<script src="horses.js?v=20260903-v15"></script>
-<script src="video-evaluation.js?v=20260903-v15"></script>
-<script src="family-data.js?v=20260903-v15"></script>
-<script src="surgery-data.js?v=20260903-v15"></script>
-<script src="tour-extra-data.js?v=20260903-v15"></script>
-<script src="reference-data.js?v=20260903-v15"></script>
-<script src="app.js?v=20260903-v15"></script>
+<script src="horses.js?v=20260903-v16"></script>
+<script src="video-evaluation.js?v=20260903-v16"></script>
+<script src="family-data.js?v=20260903-v16"></script>
+<script src="surgery-data.js?v=20260903-v16"></script>
+<script src="tour-extra-data.js?v=20260903-v16"></script>
+<script src="reference-data.js?v=20260903-v16"></script>
+<script src="app.js?v=20260903-v16"></script>
 </body></html>

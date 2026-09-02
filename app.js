@@ -14,6 +14,46 @@ const stateKey=no=>'carrot2026_'+no;
 function loadState(no){try{return JSON.parse(localStorage.getItem(stateKey(no))||'{}')}catch(e){return {}}}
 function saveState(no,s){localStorage.setItem(stateKey(no),JSON.stringify(s))}
 
+const TOUR_TEMPLATE={
+ distance:{el:'tplDistance',options:['短距離','マイル','中距離','中長距離','長距離','幅広い']},
+ course:{el:'tplCourse',options:['芝','ダート','芝ダ兼用','小回り向き','広いコース向き']},
+ temperament:{el:'tplTemperament',options:['おとなしい','素直','落ち着き','前向き','活発','繊細','気が強い','幼い']},
+ debut:{el:'tplDebut',options:['夏前','夏','秋','年内','3歳','じっくり'],single:true},
+ target:{el:'tplTarget',options:['2歳戦','クラシック','重賞','OP','ダート路線','古馬で成長']}
+};
+function templateState(s){
+ const raw=(s&&s.tourTemplate)||{};
+ const out={};
+ Object.keys(TOUR_TEMPLATE).forEach(k=>{
+   const v=raw[k];
+   out[k]=Array.isArray(v)?v.filter(x=>TOUR_TEMPLATE[k].options.includes(x)):[];
+ });
+ return out;
+}
+function renderTourTemplate(no){
+ const st=loadState(no), selected=templateState(st);
+ Object.entries(TOUR_TEMPLATE).forEach(([key,cfg])=>{
+   const box=$(cfg.el); if(!box)return;
+   box.innerHTML='';
+   cfg.options.forEach(label=>{
+     const b=document.createElement('button');
+     b.type='button'; b.className='template-btn'; b.textContent=label;
+     const on=selected[key].includes(label);
+     b.classList.toggle('selected',on); b.setAttribute('aria-pressed',on?'true':'false');
+     b.onclick=()=>{
+       if(!current)return;
+       const state=loadState(current.no), cur=templateState(state);
+       const has=cur[key].includes(label);
+       if(cfg.single){cur[key]=has?[]:[label]}
+       else cur[key]=has?cur[key].filter(x=>x!==label):[...cur[key],label];
+       state.tourTemplate=cur; saveState(current.no,state); renderTourTemplate(current.no);
+     };
+     box.appendChild(b);
+   });
+ });
+}
+function templateText(state,key){return templateState(state)[key].join(' / ')}
+
 function extra(no){return (TE.horses||{})[String(no)]||{}}
 function refData(no){return RD[String(no)]||{}}
 function damLink(h){
@@ -254,7 +294,7 @@ function openHorse(no){
  $('earnIndex').textContent=h.earnIndex.toFixed(1);$('earnRank').textContent=`94頭中 ${h.earnRank}位相当`;
  $('winIndex').textContent=h.winIndex.toFixed(1);$('winRank').textContent=`94頭中 ${h.winRank}位相当`;
  const s=loadState(no);$('star').textContent=s.star?'★':'☆';$('star').classList.toggle('on',!!s.star);$('memo').value=s.memo||'';
- factorMode='reg';$('freg').classList.add('active');$('fcls').classList.remove('active');renderFactors();renderFamily(no);renderVideo(no);
+ factorMode='reg';$('freg').classList.add('active');$('fcls').classList.remove('active');renderFactors();renderFamily(no);renderVideo(no);renderTourTemplate(no);
  $('sheet').classList.add('open');$('sheetbg').classList.add('open')
 }
 $('freg').onclick=()=>{factorMode='reg';$('freg').classList.add('active');$('fcls').classList.remove('active');renderFactors()}
@@ -266,6 +306,7 @@ $('star').onclick=()=>{
  else buildList(view);
 }
 $('memo').oninput=e=>{if(!current)return;const s=loadState(current.no);s.memo=e.target.value;saveState(current.no,s)}
+$('tplClear').onclick=()=>{if(!current)return;const s=loadState(current.no);s.tourTemplate={};saveState(current.no,s);renderTourTemplate(current.no)}
 function closeSheet(){$('sheet').classList.remove('open');$('sheetbg').classList.remove('open')}
 $('close').onclick=closeSheet;$('sheetbg').onclick=closeSheet;
 
@@ -275,22 +316,25 @@ function savedStateEntries(){
  return H.map(h=>({horse:h,state:loadState(h.no)}));
 }
 function exportCounts(){
- let memo=0,star=0,videoChanged=0,any=0;
+ let memo=0,star=0,videoChanged=0,template=0,any=0;
  savedStateEntries().forEach(({state})=>{
    const hasMemo=String(state.memo||'').trim().length>0;
    const hasStar=!!state.star;
    const ve=state.videoEval||{};
    const hasVideo=Object.keys(ve).some(k=>Object.prototype.hasOwnProperty.call(ve,k));
+   const tt=templateState(state);
+   const hasTemplate=Object.values(tt).some(a=>a.length>0);
    if(hasMemo)memo++;
    if(hasStar)star++;
    if(hasVideo)videoChanged++;
-   if(hasMemo||hasStar||hasVideo)any++;
+   if(hasTemplate)template++;
+   if(hasMemo||hasStar||hasVideo||hasTemplate)any++;
  });
- return {memo,star,videoChanged,any};
+ return {memo,star,videoChanged,template,any};
 }
 function updateExportSummary(){
  const c=exportCounts();
- $('exportSummary').textContent=`保存あり ${c.any}頭 ／ コメント ${c.memo}頭 ／ ★ ${c.star}頭 ／ 動画評価変更 ${c.videoChanged}頭`;
+ $('exportSummary').textContent=`保存あり ${c.any}頭 ／ テンプレ ${c.template}頭 ／ 特記事項 ${c.memo}頭 ／ ★ ${c.star}頭 ／ 動画評価変更 ${c.videoChanged}頭`;
 }
 function openExport(){
  updateExportSummary();
@@ -307,14 +351,14 @@ function csvCell(v){
  return /[",\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;
 }
 function exportCsvText(){
- const headers=['No','募集馬名','会場','v3順位','v3指数','★','コメント',...EXPORT_VIDEO_KEYS,'動画評価変更項目'];
+ const headers=['No','募集馬名','会場','v3順位','v3指数','★','距離適性','コース適性','性格・気性','デビュー時期','将来目標','特記事項',...EXPORT_VIDEO_KEYS,'動画評価変更項目'];
  const lines=[headers.map(csvCell).join(',')];
  [...H].sort((a,b)=>Number(a.no)-Number(b.no)).forEach(h=>{
    const st=loadState(h.no), saved=st.videoEval||{};
    const changed=EXPORT_VIDEO_KEYS.filter(k=>Object.prototype.hasOwnProperty.call(saved,k)).join(' / ');
    const vals=[
      h.no,h.name,(V.find(v=>v.id===h.venue)||{}).label||h.venue,h.rank,h.score.toFixed(1),
-     st.star?'★':'',st.memo||'',
+     st.star?'★':'',templateText(st,'distance'),templateText(st,'course'),templateText(st,'temperament'),templateText(st,'debut'),templateText(st,'target'),st.memo||'',
      ...EXPORT_VIDEO_KEYS.map(k=>ratingLabel(effectiveVideoRating(h.no,k))),
      changed
    ];
@@ -334,7 +378,7 @@ function exportJsonObject(){
  });
  return {
    format:'carrot-tour-local-backup',
-   version:15,
+   version:16,
    season:2026,
    stateKeyPrefix:'carrot2026_',
    exportedAt:new Date().toISOString(),

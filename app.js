@@ -17,7 +17,7 @@ function saveState(no,s){localStorage.setItem(stateKey(no),JSON.stringify(s))}
 const TOUR_TEMPLATE={
  distance:{el:'tplDistance',options:['短距離','マイル','中距離','中長距離','長距離','幅広い']},
  course:{el:'tplCourse',options:['芝','ダート','芝ダ兼用','小回り向き','広いコース向き']},
- temperament:{el:'tplTemperament',options:['おとなしい','素直','落ち着き','前向き','活発','繊細','気が強い','幼い']},
+ temperament:{el:'tplTemperament',options:['おとなしい','素直','落ち着き','前向き','活発','気が強い','繊細','幼い','優等生','馬に強い','人に強い','人に従順']},
  debut:{el:'tplDebut',options:['夏前','夏','秋','年内','3歳','じっくり'],single:true},
  target:{el:'tplTarget',options:['2歳戦','クラシック','重賞','OP','ダート路線','古馬で成長']}
 };

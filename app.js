@@ -66,7 +66,6 @@ function renderVenueTabs(){
    b.textContent=s.label;
    b.onclick=()=>{
      venue=s.id;
-     if(isAllScope() && view==='map') view='venueList';
      renderAll();
    };
    $('venueTabs').appendChild(b);
@@ -118,17 +117,21 @@ function appendCard(h){
 function syncViewButtons(){
  const mapBtn=document.querySelector('.viewbtn[data-view="map"]');
  if(mapBtn){
-   mapBtn.disabled=isAllScope();
-   mapBtn.classList.toggle('disabled',isAllScope());
+   mapBtn.disabled=false;
+   mapBtn.classList.remove('disabled');
  }
  document.querySelectorAll('.viewbtn').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
 }
 function setView(mode){
- if(mode==='map' && isAllScope()) return;
  view=mode;
  syncViewButtons();
  if(mode==='map'){
-   $('mapView').classList.remove('hidden');$('listView').classList.add('hidden');renderMap();
+   if(isAllScope()){
+     // 全94頭では「配置図」ボタンを募集番号順の全馬一覧として使う。
+     $('mapView').classList.add('hidden');$('listView').classList.remove('hidden');buildList('allNumberList');
+   }else{
+     $('mapView').classList.remove('hidden');$('listView').classList.add('hidden');renderMap();
+   }
  }else{
    $('mapView').classList.add('hidden');$('listView').classList.remove('hidden');buildList(mode);
  }
@@ -368,10 +371,14 @@ $('exportJson').onclick=async()=>{
 };
 
 function renderAll(){
- if(isAllScope() && view==='map') view='venueList';
  renderVenueTabs();renderHeader();syncViewButtons();
  if(view==='map'){
-   $('mapView').classList.remove('hidden');$('listView').classList.add('hidden');renderMap();
+   if(isAllScope()){
+     // 全94頭 + 配置図 = 全94頭の募集番号順一覧。
+     $('mapView').classList.add('hidden');$('listView').classList.remove('hidden');buildList('allNumberList');
+   }else{
+     $('mapView').classList.remove('hidden');$('listView').classList.add('hidden');renderMap();
+   }
  }else{
    $('mapView').classList.add('hidden');$('listView').classList.remove('hidden');buildList(view);
  }

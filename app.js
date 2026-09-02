@@ -111,7 +111,16 @@ function buildList(mode){
 function appendCard(h){
  const c=document.createElement('div');c.className='list-card';c.dataset.search=`${h.no} ${h.name} ${h.sire} ${h.dam} ${h.bms} ${h.trainer}`.toLowerCase();
  const starred=!!loadState(h.no).star;
- c.innerHTML=`<div class="rankbadge noheat${starred?' starred-no':''}" style="background:${rankHeatColor(h)}" title="募集No.${h.no} / 総合${h.rank}位" aria-label="${starred?'★':''}募集No.${h.no} 総合${h.rank}位">${starred?'<span class="list-star">★</span>':''}<span>${h.no}</span></div><div><div class="lname">No.${h.no} ${safeText(displayName(h))} ${videoLink(h)}</div><div class="lsub">${safeText(h.sire)} / 母 ${safeText(h.dam)} / ${safeText(h.trainer)}</div></div><div class="lright">v3 ${h.score.toFixed(1)}<br>FR ${Math.round(h.predFR)}kg</div>`;
+ const url=extra(h.no).videoUrl;
+ const badgeInner=`${starred?'<span class="list-star">★</span>':''}<span>${h.no}</span>`;
+ const badgeTitle=url?`募集No.${h.no} / 総合${h.rank}位 / タップで公式動画`:`募集No.${h.no} / 総合${h.rank}位`;
+ const badgeAria=url?`${starred?'★':''}募集No.${h.no} 総合${h.rank}位 公式動画を開く`:`${starred?'★':''}募集No.${h.no} 総合${h.rank}位`;
+ const badge=url
+   ?`<a class="rankbadge noheat video-badge${starred?' starred-no':''}" style="background:${rankHeatColor(h)}" href="${safeText(url)}" target="_blank" rel="noopener" title="${safeText(badgeTitle)}" aria-label="${safeText(badgeAria)}">${badgeInner}</a>`
+   :`<div class="rankbadge noheat${starred?' starred-no':''}" style="background:${rankHeatColor(h)}" title="${safeText(badgeTitle)}" aria-label="${safeText(badgeAria)}">${badgeInner}</div>`;
+ c.innerHTML=`${badge}<div><div class="lname">${safeText(displayName(h))}</div><div class="lsub">${safeText(h.sire)} / 母 ${safeText(h.dam)} / ${safeText(h.trainer)}</div></div><div class="lright">v3 ${h.score.toFixed(1)}<br>FR ${Math.round(h.predFR)}kg</div>`;
+ const videoBadge=c.querySelector('.video-badge');
+ if(videoBadge)videoBadge.onclick=e=>e.stopPropagation();
  c.onclick=()=>openHorse(h.no);$('list').appendChild(c)
 }
 function syncViewButtons(){
@@ -237,7 +246,7 @@ function renderSurgery(no){
  box.classList.remove('hidden');
 }
 function openHorse(no){
- const h=byNo[no];current=h;$('stitle').innerHTML=`No.${h.no} ${safeText(displayName(h))} ${videoLink(h)}`;$('smeta').innerHTML=`${safeText(h.sex)} / ${safeText(h.trainer)} <span class="trainer-stat">${safeText(trainerStat(h))}</span> / ${safeText(h.birthday)}`;
+ const h=byNo[no];current=h;$('stitle').innerHTML=`${safeText(displayName(h))}`;$('smeta').innerHTML=`${safeText(h.sex)} / ${safeText(h.trainer)} <span class="trainer-stat">${safeText(trainerStat(h))}</span> / ${safeText(h.birthday)}`;
  $('psire').textContent=h.sire;$('pdam').innerHTML=damLink(h);$('pbms').textContent=h.bms;
  $('mrank').textContent='#'+h.rank;$('mscore').textContent=h.score.toFixed(1);$('mprice').textContent=Math.round(h.price)+'万';
  $('mweight').textContent=Math.round(h.weight)+'kg';$('mfr').textContent=Math.round(h.predFR)+'kg';$('mgain').textContent=(h.gain>=0?'+':'')+Math.round(h.gain)+'kg';
@@ -325,7 +334,7 @@ function exportJsonObject(){
  });
  return {
    format:'carrot-tour-local-backup',
-   version:13,
+   version:15,
    season:2026,
    stateKeyPrefix:'carrot2026_',
    exportedAt:new Date().toISOString(),

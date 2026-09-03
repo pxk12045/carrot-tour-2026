@@ -15,18 +15,35 @@ function loadState(no){try{return JSON.parse(localStorage.getItem(stateKey(no))|
 function saveState(no,s){localStorage.setItem(stateKey(no),JSON.stringify(s))}
 
 const TOUR_TEMPLATE={
- distance:{el:'tplDistance',options:['短距離','マイル','中距離','中長距離','長距離','幅広い']},
- course:{el:'tplCourse',options:['芝','ダート','芝ダ兼用','小回り向き','広いコース向き']},
- temperament:{el:'tplTemperament',options:['おとなしい','素直','落ち着き','前向き','活発','気が強い','繊細','幼い','優等生','馬に強い','人に強い','人に従順']},
- debut:{el:'tplDebut',options:['夏前','夏','秋','年内','3歳','じっくり'],single:true},
- target:{el:'tplTarget',options:['2歳戦','クラシック','重賞','OP','ダート路線','古馬で成長']}
+ distance:{el:'tplDistance',options:['短距離','マイル','中距離','中長距離','距離融通']},
+ course:{el:'tplCourse',options:['芝','ダート','芝ダ兼用','小回り','広いコース']},
+ temperament:{el:'tplTemperament',options:['おとなしい','素直','落ち着き','前向き','活発','繊細','気が強い','幼い']},
+ debut:{el:'tplDebut',options:['6月','夏','秋','年内','3歳','じっくり'],single:true},
+ target:{el:'tplTarget',options:['2歳戦','クラシック','重賞','OP','ダート路線','古馬で成長']},
+ growth:{el:'tplGrowth',options:['完成度高い','標準','成長余地','晩成'],single:true}
+
+
+  handler:{
+    el:'tplHandler',
+    options:['高い','そこそこ','低い','謎'],
+    single:true
+  },
+};
+
+// v16以前で選ばれていた表現を、意味を保てる範囲で新ラベルへ引き継ぐ。
+const TOUR_TEMPLATE_MIGRATIONS={
+ distance:{'幅広い':'距離融通'},
+ course:{'小回り向き':'小回り','広いコース向き':'広いコース'},
+ debut:{'夏前':'6月'}
 };
 function templateState(s){
  const raw=(s&&s.tourTemplate)||{};
  const out={};
  Object.keys(TOUR_TEMPLATE).forEach(k=>{
    const v=raw[k];
-   out[k]=Array.isArray(v)?v.filter(x=>TOUR_TEMPLATE[k].options.includes(x)):[];
+   const mig=TOUR_TEMPLATE_MIGRATIONS[k]||{};
+   const mapped=Array.isArray(v)?v.map(x=>mig[x]||x):[];
+   out[k]=[...new Set(mapped.filter(x=>TOUR_TEMPLATE[k].options.includes(x)))];
  });
  return out;
 }
@@ -351,14 +368,14 @@ function csvCell(v){
  return /[",\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;
 }
 function exportCsvText(){
- const headers=['No','募集馬名','会場','v3順位','v3指数','★','距離適性','コース適性','性格・気性','デビュー時期','将来目標','特記事項',...EXPORT_VIDEO_KEYS,'動画評価変更項目'];
+ const headers=['No','募集馬名','会場','v3順位','v3指数','★','距離適性','コース適性','性格・気性','デビュー時期','将来目標','成長度','引き手評価','特記事項',...EXPORT_VIDEO_KEYS,'動画評価変更項目'];
  const lines=[headers.map(csvCell).join(',')];
  [...H].sort((a,b)=>Number(a.no)-Number(b.no)).forEach(h=>{
    const st=loadState(h.no), saved=st.videoEval||{};
    const changed=EXPORT_VIDEO_KEYS.filter(k=>Object.prototype.hasOwnProperty.call(saved,k)).join(' / ');
    const vals=[
      h.no,h.name,(V.find(v=>v.id===h.venue)||{}).label||h.venue,h.rank,h.score.toFixed(1),
-     st.star?'★':'',templateText(st,'distance'),templateText(st,'course'),templateText(st,'temperament'),templateText(st,'debut'),templateText(st,'target'),st.memo||'',
+     st.star?'★':'',templateText(st,'distance'),templateText(st,'course'),templateText(st,'temperament'),templateText(st,'debut'),templateText(st,'target'),templateText(st,'growth'),st.memo||'',
      ...EXPORT_VIDEO_KEYS.map(k=>ratingLabel(effectiveVideoRating(h.no,k))),
      changed
    ];
@@ -378,7 +395,7 @@ function exportJsonObject(){
  });
  return {
    format:'carrot-tour-local-backup',
-   version:16,
+   version:17,
    season:2026,
    stateKeyPrefix:'carrot2026_',
    exportedAt:new Date().toISOString(),

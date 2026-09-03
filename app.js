@@ -300,18 +300,19 @@ function shortBirthday(s){
  if(!m)m=raw.match(/(\d{1,2})[\/\-月](\d{1,2})/);
  return m?`${Number(m[1])}/${Number(m[2])}`:raw;
 }
-function metricRank(value,getter,higherBetter=true){
+function metricRankInGroup(value,getter,higherBetter=true,group=H){
  const v=finiteNumber(value);
  if(v==null)return null;
- const vals=H.map(getter).map(finiteNumber).filter(x=>x!=null);
+ const vals=group.map(getter).map(finiteNumber).filter(x=>x!=null);
  if(!vals.length)return null;
  const better=vals.filter(x=>higherBetter?x>v:x<v).length;
  const ties=vals.filter(x=>Math.abs(x-v)<1e-9).length;
  return better+(ties+1)/2;
 }
-function topPct(value,getter,higherBetter=true){
- const vals=H.map(getter).map(finiteNumber).filter(x=>x!=null);
- const rank=metricRank(value,getter,higherBetter);
+function topPctBySex(h,value,getter,higherBetter=true){
+ const group=H.filter(x=>x.sex===h.sex);
+ const vals=group.map(getter).map(finiteNumber).filter(x=>x!=null);
+ const rank=metricRankInGroup(value,getter,higherBetter,group);
  if(rank==null||!vals.length)return null;
  return Math.max(1,Math.min(100,Math.round(rank/vals.length*100)));
 }
@@ -327,9 +328,9 @@ function setHeatPanel(panelId,pct){
  el.style.background=heatByTopPct(pct);
  el.classList.toggle('metric-missing',pct==null);
 }
-function setPct(id,pct){
+function setPct(id,pct,sex=''){
  const el=$(id);
- if(el)el.textContent=pct==null?'—':`上位${pct}%`;
+ if(el)el.textContent=pct==null?'—':`${sex?sex+' ':''}上位${pct}%`;
 }
 function futureHeightValue(h){return finiteNumber(extra(h.no).futureHeight)}
 function futureChestValue(h){return finiteNumber(extra(h.no).futureChest)}
@@ -344,8 +345,8 @@ function renderFutureBody(no){
  }else{
    const gain=fh-finiteNumber(h.height);
    $('futureHeight').textContent=`${fh.toFixed(1)}cm (${gain>=0?'+':''}${gain.toFixed(1)})`;
-   const pct=topPct(fh,futureHeightValue,true);
-   setPct('pFutureHeight',pct);setHeatPanel('panelFutureHeight',pct);
+   const pct=topPctBySex(h,fh,futureHeightValue,true);
+   setPct('pFutureHeight',pct,h.sex);setHeatPanel('panelFutureHeight',pct);
  }
 
  if(fc==null){
@@ -354,8 +355,8 @@ function renderFutureBody(no){
  }else{
    const gain=fc-finiteNumber(h.chest);
    $('futureChest').textContent=`${fc.toFixed(1)}cm (${gain>=0?'+':''}${gain.toFixed(1)})`;
-   const pct=topPct(fc,futureChestValue,true);
-   setPct('pFutureChest',pct);setHeatPanel('panelFutureChest',pct);
+   const pct=topPctBySex(h,fc,futureChestValue,true);
+   setPct('pFutureChest',pct,h.sex);setHeatPanel('panelFutureChest',pct);
  }
 }
 function renderSurgery(no){
@@ -373,35 +374,35 @@ function openHorse(no){
  const h=byNo[no];current=h;$('stitle').innerHTML=`${safeText(displayName(h))}`;$('smeta').innerHTML=`${safeText(h.sex)} / ${safeText(h.trainer)} <span class="trainer-stat">${safeText(trainerStat(h))}</span> / ${safeText(h.birthday)}`;
  $('psire').textContent=h.sire;$('pdam').innerHTML=damLink(h);$('pbms').textContent=h.bms;
  // 3x3 panel: index shows rank; all other panels show raw value + top percentile among all 94.
- $('mrank').textContent=`${h.rank}位`;
+ $('mrank').textContent=Number(h.score).toFixed(1);
  $('pIndex').textContent='';
  const indexPct=Math.max(1,Math.min(100,Math.round(Number(h.rank)/H.length*100)));
  setHeatPanel('panelIndex',indexPct);
 
  $('mprice').textContent=Math.round(h.price)+'万';
- const pricePct=topPct(h.price,x=>x.price,true);
- setPct('pPrice',pricePct);setHeatPanel('panelPrice',pricePct);
+ const pricePct=topPctBySex(h,h.price,x=>x.price,true);
+ setPct('pPrice',pricePct,h.sex);setHeatPanel('panelPrice',pricePct);
 
  $('mcannon').textContent=Number(h.cannon).toFixed(1)+'cm';
- const cannonPct=topPct(h.cannon,x=>x.cannon,true);
- setPct('pCannon',cannonPct);setHeatPanel('panelCannon',cannonPct);
+ const cannonPct=topPctBySex(h,h.cannon,x=>x.cannon,true);
+ setPct('pCannon',cannonPct,h.sex);setHeatPanel('panelCannon',cannonPct);
 
  $('mweight').textContent=Math.round(h.weight)+'kg';
- const weightPct=topPct(h.weight,x=>x.weight,true);
- setPct('pWeight',weightPct);setHeatPanel('panelWeight',weightPct);
+ const weightPct=topPctBySex(h,h.weight,x=>x.weight,true);
+ setPct('pWeight',weightPct,h.sex);setHeatPanel('panelWeight',weightPct);
 
  $('mheight').textContent=Number(h.height).toFixed(1)+'cm';
- const heightPct=topPct(h.height,x=>x.height,true);
- setPct('pHeight',heightPct);setHeatPanel('panelHeight',heightPct);
+ const heightPct=topPctBySex(h,h.height,x=>x.height,true);
+ setPct('pHeight',heightPct,h.sex);setHeatPanel('panelHeight',heightPct);
 
  $('mchest').textContent=Number(h.chest).toFixed(1)+'cm';
- const chestPct=topPct(h.chest,x=>x.chest,true);
- setPct('pChest',chestPct);setHeatPanel('panelChest',chestPct);
+ const chestPct=topPctBySex(h,h.chest,x=>x.chest,true);
+ setPct('pChest',chestPct,h.sex);setHeatPanel('panelChest',chestPct);
 
  const fr=finiteNumber(h.predFR), gain=finiteNumber(h.gain);
  $('mfr').textContent=fr==null?'—':`${Math.round(fr)}kg (${gain==null?'—':`${gain>=0?'+':''}${Math.round(gain)}kg`})`;
- const frPct=fr==null?null:topPct(fr,x=>x.predFR,true);
- setPct('pFR',frPct);setHeatPanel('panelFR',frPct);
+ const frPct=fr==null?null:topPctBySex(h,fr,x=>x.predFR,true);
+ setPct('pFR',frPct,h.sex);setHeatPanel('panelFR',frPct);
 
  renderFutureBody(no);renderSurgery(no);
  $('earnIndex').textContent=h.earnIndex.toFixed(1);$('earnRank').textContent=`94頭中 ${h.earnRank}位相当`;

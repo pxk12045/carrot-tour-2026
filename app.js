@@ -1,6 +1,64 @@
 
 const H=window.HORSES, V=window.VENUES, VE=window.VIDEO_EVAL||{}, FD=window.FAMILY_DATA||{}, SD=window.SURGERY_DATA||{}, TE=window.TOUR_EXTRA||{horses:{},cohortAverageBySex:{}}, RD=window.REFERENCE_DATA||{};
 
+// Primary v3.1 (2026-09):
+// v3 fitted coefficients are fixed. Only the standardized contribution of
+// recruitment weight and predicted first-run weight is shrunk to 75%.
+// All other contributions stay at 100%. The two raw model scores are then
+// re-ranked within the 94 horses and their rank indices are averaged.
+function applyPrimaryV31(horses){
+ if(!Array.isArray(horses)||!horses.length)return;
+ if(horses.every(h=>h._primaryModel==='v3.1'))return;
+
+ const shrink=new Set(['募集時体重','想定FR']);
+
+ horses.forEach(h=>{
+   if(!h.factors)return;
+   shrink.forEach(k=>{
+     if(!h.factors[k])return;
+     if(Number.isFinite(Number(h.factors[k].reg))) h.factors[k].reg=Number(h.factors[k].reg)*0.75;
+     if(Number.isFinite(Number(h.factors[k].cls))) h.factors[k].cls=Number(h.factors[k].cls)*0.75;
+   });
+ });
+
+ const calc=horses.map(h=>({
+   h,
+   reg:Object.values(h.factors||{}).reduce((s,v)=>s+(Number(v?.reg)||0),0),
+   cls:Object.values(h.factors||{}).reduce((s,v)=>s+(Number(v?.cls)||0),0)
+ }));
+
+ const regSorted=[...calc].sort((a,b)=>b.reg-a.reg);
+ const clsSorted=[...calc].sort((a,b)=>b.cls-a.cls);
+ const regRank=new Map(regSorted.map((r,i)=>[r.h.no,i+1]));
+ const clsRank=new Map(clsSorted.map((r,i)=>[r.h.no,i+1]));
+
+ calc.forEach(r=>{
+   r.earnRank=regRank.get(r.h.no);
+   r.winRank=clsRank.get(r.h.no);
+   r.earnIndex=(horses.length-r.earnRank)/(horses.length-1);
+   r.winIndex=(horses.length-r.winRank)/(horses.length-1);
+   r.composite=(r.earnIndex+r.winIndex)/2;
+ });
+
+ // v3.1 source ranking uses the lower position when composite scores tie
+ // (e.g. No.33 and No.51 both display 4th at the same composite score).
+ const scores=calc.map(r=>r.composite).sort((a,b)=>b-a);
+ calc.forEach(r=>{
+   const eps=1e-12;
+   r.finalRank=scores.filter(s=>s>=r.composite-eps).length;
+
+   r.h.earnRank=r.earnRank;
+   r.h.winRank=r.winRank;
+   r.h.earnIndex=r.earnIndex*100;
+   r.h.winIndex=r.winIndex*100;
+   r.h.score=r.composite*100;
+   r.h.rank=r.finalRank;
+   r.h.tier=r.finalRank<=10?'top10':r.finalRank<=25?'top25':r.finalRank<=50?'top50':'rest';
+   r.h._primaryModel='v3.1';
+ });
+}
+applyPrimaryV31(H);
+
 const FACTOR_ORDER=['体高','胸囲','管囲','募集時体重','募集価格','生月日補正','想定FR','性別'];
 
 const FACTOR_SCALE={
@@ -108,12 +166,18 @@ function isAllScope(){return venue==='all'}
 function venueObj(){return isAllScope()?null:V.find(v=>v.id===venue)}
 function currentVenueHorses(){return isAllScope()?H:H.filter(h=>h.venue===venue)}
 function tierClass(h){return h.tier}
-function rankHeatColor(h){
- const n=Math.max(2,H.length);
- const t=Math.max(0,Math.min(1,(Number(h.rank)-1)/(n-1)));
- // 指数順位: 1位=赤 → 下位=青。順位そのものは配置図には表示しない。
- const hue=220*t;
- return `hsl(${hue.toFixed(0)} 78% 42%)`;
+function rankTopPct(h){
+ const n=Math.max(1,H.length);
+ return Math.max(1,Math.min(100,Math.round(Number(h.rank)/n*100)));
+}
+function rankHeatColor(h){return heatByTopPct(rankTopPct(h))}
+function rankHeatTextColor(h){
+ const p=rankTopPct(h);
+ return p>=30&&p<=70?'#111':'#fff';
+}
+function rankHeatTextShadow(h){
+ const p=rankTopPct(h);
+ return p>=30&&p<=70?'none':'0 1px 2px rgba(0,0,0,.55)';
 }
 function renderVenueTabs(){
  $('venueTabs').innerHTML='';
@@ -146,6 +210,7 @@ function renderMap(){
   const b=document.createElement('button');
   b.className='marker map-rank'+(starred?' starred':'');
   b.style.left=h.x+'%';b.style.top=h.y+'%';b.style.background=rankHeatColor(h);
+  b.style.color=rankHeatTextColor(h);b.style.textShadow=rankHeatTextShadow(h);
   b.innerHTML=`${starred?'<span class="map-star">★</span>':''}<span class="mn">${h.no}</span>`;
   b.setAttribute('aria-label',`${starred?'★':''}募集No.${h.no} 総合${h.rank}位`);
   b.title=`${starred?'★ ':''}No.${h.no} / 総合${h.rank}位`;
@@ -174,9 +239,9 @@ function appendCard(h){
  const badgeTitle=url?`募集No.${h.no} / 総合${h.rank}位 / タップで公式動画`:`募集No.${h.no} / 総合${h.rank}位`;
  const badgeAria=url?`${starred?'★':''}募集No.${h.no} 総合${h.rank}位 公式動画を開く`:`${starred?'★':''}募集No.${h.no} 総合${h.rank}位`;
  const badge=url
-   ?`<a class="rankbadge noheat video-badge${starred?' starred-no':''}" style="background:${rankHeatColor(h)}" href="${safeText(url)}" target="_blank" rel="noopener" title="${safeText(badgeTitle)}" aria-label="${safeText(badgeAria)}">${badgeInner}</a>`
-   :`<div class="rankbadge noheat${starred?' starred-no':''}" style="background:${rankHeatColor(h)}" title="${safeText(badgeTitle)}" aria-label="${safeText(badgeAria)}">${badgeInner}</div>`;
- c.innerHTML=`${badge}<div><div class="lname">${safeText(displayName(h))}</div><div class="lsub">${safeText(h.sire)} / 母 ${safeText(h.dam)} / ${safeText(h.trainer)}</div></div><div class="lright">v3 ${h.score.toFixed(1)}<br>FR ${Math.round(h.predFR)}kg</div>`;
+   ?`<a class="rankbadge noheat video-badge${starred?' starred-no':''}" style="background:${rankHeatColor(h)};color:${rankHeatTextColor(h)};text-shadow:${rankHeatTextShadow(h)}" href="${safeText(url)}" target="_blank" rel="noopener" title="${safeText(badgeTitle)}" aria-label="${safeText(badgeAria)}">${badgeInner}</a>`
+   :`<div class="rankbadge noheat${starred?' starred-no':''}" style="background:${rankHeatColor(h)};color:${rankHeatTextColor(h)};text-shadow:${rankHeatTextShadow(h)}" title="${safeText(badgeTitle)}" aria-label="${safeText(badgeAria)}">${badgeInner}</div>`;
+ c.innerHTML=`${badge}<div><div class="lname">${safeText(displayName(h))}</div><div class="lsub">${safeText(h.sire)} / 母 ${safeText(h.dam)} / ${safeText(h.trainer)}</div></div><div class="lright">v3.1 ${h.score.toFixed(1)}<br>FR ${Math.round(h.predFR)}kg</div>`;
  const videoBadge=c.querySelector('.video-badge');
  if(videoBadge)videoBadge.onclick=e=>e.stopPropagation();
  c.onclick=()=>openHorse(h.no);$('list').appendChild(c)
@@ -379,7 +444,7 @@ function renderSurgery(no){
 function openHorse(no){
  const h=byNo[no];current=h;$('stitle').innerHTML=`${safeText(displayName(h))}`;$('smeta').innerHTML=`${safeText(h.sex)} / ${safeText(h.trainer)} <span class="trainer-stat">${safeText(trainerStat(h))}</span> / ${safeText(h.birthday)}`;
  $('psire').textContent=h.sire;$('pdam').innerHTML=damLink(h);$('pbms').textContent=h.bms;
- // 3x3 panel: index shows rank; all other panels show raw value + top percentile among all 94.
+ // 3x3 panel: index shows the v3.1 composite index; the other panels show values + comparison percentiles.
  $('mrank').textContent=Number(h.score).toFixed(1);
  const indexPct=Math.max(1,Math.min(100,Math.round(Number(h.rank)/H.length*100)));
  $('pIndex').textContent=`上位${indexPct}%`;
@@ -471,7 +536,7 @@ function csvCell(v){
  return /[",\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;
 }
 function exportCsvText(){
- const headers=['No','募集馬名','会場','v3順位','v3指数','★','距離適性','コース適性','性格・気性','デビュー時期','将来目標','成長度','引き手評価','特記事項',...EXPORT_VIDEO_KEYS,'動画評価変更項目'];
+ const headers=['No','募集馬名','会場','v3.1順位','v3.1指数','★','距離適性','コース適性','性格・気性','デビュー時期','将来目標','成長度','引き手評価','特記事項',...EXPORT_VIDEO_KEYS,'動画評価変更項目'];
  const lines=[headers.map(csvCell).join(',')];
  [...H].sort((a,b)=>Number(a.no)-Number(b.no)).forEach(h=>{
    const st=loadState(h.no), saved=st.videoEval||{};
@@ -498,8 +563,10 @@ function exportJsonObject(){
  });
  return {
    format:'carrot-tour-local-backup',
-   version:18,
+   version:20,
    season:2026,
+   primaryModel:'v3.1',
+   primaryModelNote:'v3 fixed coefficients; recruitment weight and predFR contributions at 75%',
    stateKeyPrefix:'carrot2026_',
    exportedAt:new Date().toISOString(),
    horseCount:H.length,

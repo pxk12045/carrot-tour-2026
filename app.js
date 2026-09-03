@@ -21,6 +21,13 @@ const TOUR_TEMPLATE={
  debut:{el:'tplDebut',options:['6月','夏','秋','年内','3歳','じっくり'],single:true},
  target:{el:'tplTarget',options:['2歳戦','クラシック','重賞','OP','ダート路線','古馬で成長']},
  growth:{el:'tplGrowth',options:['完成度高い','標準','成長余地','晩成'],single:true}
+
+
+  handler:{
+    el:'tplHandler',
+    options:['高い','そこそこ','低い','謎'],
+    single:true
+  },
 };
 
 // v16以前で選ばれていた表現を、意味を保てる範囲で新ラベルへ引き継ぐ。
@@ -361,7 +368,7 @@ function csvCell(v){
  return /[",\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;
 }
 function exportCsvText(){
- const headers=['No','募集馬名','会場','v3順位','v3指数','★','距離適性','コース適性','性格・気性','デビュー時期','将来目標','成長度','特記事項',...EXPORT_VIDEO_KEYS,'動画評価変更項目'];
+ const headers=['No','募集馬名','会場','v3順位','v3指数','★','距離適性','コース適性','性格・気性','デビュー時期','将来目標','成長度','引き手評価','特記事項',...EXPORT_VIDEO_KEYS,'動画評価変更項目'];
  const lines=[headers.map(csvCell).join(',')];
  [...H].sort((a,b)=>Number(a.no)-Number(b.no)).forEach(h=>{
    const st=loadState(h.no), saved=st.videoEval||{};

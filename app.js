@@ -20,9 +20,7 @@ const TOUR_TEMPLATE={
  temperament:{el:'tplTemperament',options:['おとなしい','素直','落ち着き','前向き','活発','繊細','気が強い','幼い']},
  debut:{el:'tplDebut',options:['6月','夏','秋','年内','3歳','じっくり'],single:true},
  target:{el:'tplTarget',options:['2歳戦','クラシック','重賞','OP','ダート路線','古馬で成長']},
- growth:{el:'tplGrowth',options:['完成度高い','標準','成長余地','晩成'],single:true}
-
-
+ growth:{el:'tplGrowth',options:['完成度高い','標準','成長余地','晩成'],single:true},
   handler:{
     el:'tplHandler',
     options:['高い','そこそこ','低い','謎'],
@@ -375,7 +373,7 @@ function exportCsvText(){
    const changed=EXPORT_VIDEO_KEYS.filter(k=>Object.prototype.hasOwnProperty.call(saved,k)).join(' / ');
    const vals=[
      h.no,h.name,(V.find(v=>v.id===h.venue)||{}).label||h.venue,h.rank,h.score.toFixed(1),
-     st.star?'★':'',templateText(st,'distance'),templateText(st,'course'),templateText(st,'temperament'),templateText(st,'debut'),templateText(st,'target'),templateText(st,'growth'),st.memo||'',
+     st.star?'★':'',templateText(st,'distance'),templateText(st,'course'),templateText(st,'temperament'),templateText(st,'debut'),templateText(st,'target'),templateText(st,'growth'),templateText(st,'handler'),st.memo||'',
      ...EXPORT_VIDEO_KEYS.map(k=>ratingLabel(effectiveVideoRating(h.no,k))),
      changed
    ];
@@ -395,7 +393,7 @@ function exportJsonObject(){
  });
  return {
    format:'carrot-tour-local-backup',
-   version:17,
+   version:18,
    season:2026,
    stateKeyPrefix:'carrot2026_',
    exportedAt:new Date().toISOString(),

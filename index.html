@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="CARROT TOUR">
-<link rel="manifest" href="manifest.webmanifest?v=20260903-v18b">
+<link rel="manifest" href="manifest.webmanifest?v=20260903-v19aa">
 <link rel="apple-touch-icon" href="icon-180.png">
-<link rel="stylesheet" href="style.css?v=20260903-v18b">
+<link rel="stylesheet" href="style.css?v=20260903-v19aa">
 <title>CARROT TOUR 2026</title>
 </head>
 <body>
@@ -72,27 +72,20 @@
    </details>
    <div id="familySourceNote" class="family-source"></div>
  </div>
- <div class="metrics">
-  <div class="metric"><div id="mrank" class="v"></div><div class="l">全94頭順位</div></div>
-  <div class="metric"><div id="mscore" class="v"></div><div class="l">v3指数</div></div>
-  <div class="metric"><div id="mprice" class="v"></div><div class="l">募集総額</div></div>
-  <div class="metric"><div id="mweight" class="v"></div><div class="l">募集時体重</div></div>
-  <div class="metric"><div id="mfr" class="v"></div><div class="l">想定FR</div></div>
-  <div class="metric"><div id="mgain" class="v"></div><div class="l">想定増加</div></div>
-  <div class="metric"><div id="mheight" class="v"></div><div class="l">体高</div></div>
-  <div class="metric"><div id="mchest" class="v"></div><div class="l">胸囲</div></div>
-  <div class="metric"><div id="mcannon" class="v"></div><div class="l">管囲</div></div>
+ <div class="metrics metrics-v19a">
+  <div id="panelIndex" class="metric metric-heat"><div class="l">指数</div><div id="mrank" class="v"></div><div id="pIndex" class="pct"></div></div>
+  <div id="panelPrice" class="metric metric-heat"><div class="l">価格</div><div id="mprice" class="v"></div><div id="pPrice" class="pct"></div></div>
+  <div id="panelCannon" class="metric metric-heat"><div class="l">管囲</div><div id="mcannon" class="v"></div><div id="pCannon" class="pct"></div></div>
+
+  <div id="panelWeight" class="metric metric-heat"><div class="l">募集時体重</div><div id="mweight" class="v"></div><div id="pWeight" class="pct"></div></div>
+  <div id="panelHeight" class="metric metric-heat"><div class="l">体高</div><div id="mheight" class="v"></div><div id="pHeight" class="pct"></div></div>
+  <div id="panelChest" class="metric metric-heat"><div class="l">胸囲</div><div id="mchest" class="v"></div><div id="pChest" class="pct"></div></div>
+
+  <div id="panelFR" class="metric metric-heat metric-long"><div class="l">想定FR（想定増加）</div><div id="mfr" class="v"></div><div id="pFR" class="pct"></div></div>
+  <div id="panelFutureHeight" class="metric metric-heat metric-long"><div class="l">将来体高（想定増加）</div><div id="futureHeight" class="v"></div><div id="pFutureHeight" class="pct"></div></div>
+  <div id="panelFutureChest" class="metric metric-heat metric-long"><div class="l">将来胸囲（想定増加）</div><div id="futureChest" class="v"></div><div id="pFutureChest" class="pct"></div></div>
  </div>
- <div id="futureBody" class="future-body">
-   <div class="future-title">初出走時の体格参考推定</div>
-   <div class="future-grid">
-     <div class="future-item"><span class="future-label">将来体高</span><b id="futureHeight"></b></div>
-     <div class="future-item"><span class="future-label">将来胸囲</span><b id="futureChest"></b></div>
-   </div>
-   <div id="futureAvg" class="future-avg"></div>
-   <div class="future-note">想定FR÷募集時体重の立方根を体高・胸囲へ掛けた参考推定。括弧内は同性平均との差。</div>
- </div>
- <div id="surgery" class="surgery hidden">
+<div id="surgery" class="surgery hidden">
    <div class="surgery-title">手術歴</div>
    <div id="surgeryText" class="surgery-text"></div>
  </div>
@@ -132,11 +125,11 @@
  <div class="memo"><div class="memo-label">特記事項</div><textarea id="memo" placeholder="テンプレにない内容だけ入力（この端末に保存）"></textarea></div>
  <button id="close" class="close">閉じる</button>
 </div>
-<script src="horses.js?v=20260903-v18b"></script>
-<script src="video-evaluation.js?v=20260903-v18b"></script>
-<script src="family-data.js?v=20260903-v18b"></script>
-<script src="surgery-data.js?v=20260903-v18b"></script>
-<script src="tour-extra-data.js?v=20260903-v18b"></script>
-<script src="reference-data.js?v=20260903-v18b"></script>
-<script src="app.js?v=20260903-v18b"></script>
+<script src="horses.js?v=20260903-v19aa"></script>
+<script src="video-evaluation.js?v=20260903-v19aa"></script>
+<script src="family-data.js?v=20260903-v19aa"></script>
+<script src="surgery-data.js?v=20260903-v19aa"></script>
+<script src="tour-extra-data.js?v=20260903-v19aa"></script>
+<script src="reference-data.js?v=20260903-v19aa"></script>
+<script src="app.js?v=20260903-v19aa"></script>
 </body></html>

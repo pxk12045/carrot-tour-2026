@@ -280,17 +280,83 @@ function renderFamily(no){
  });
  $('familySourceNote').textContent=d.source?'兄姉成績：へっぽこ軍団公開データ（取得時点）。中央・地方は分けて表示。':'母年齢・産駒順：募集馬基礎データ。';
 }
+
+function finiteNumber(v){
+ const n=Number(v);
+ return Number.isFinite(n)?n:null;
+}
+function birthdayOrdinal(s){
+ const raw=String(s??'').trim();
+ let m=raw.match(/^\s*\d{4}[\/\-年](\d{1,2})[\/\-月](\d{1,2})/);
+ if(!m)m=raw.match(/(\d{1,2})[\/\-月](\d{1,2})/);
+ if(!m)return null;
+ const month=Number(m[1]), day=Number(m[2]);
+ if(month<1||month>12||day<1||day>31)return null;
+ return month*32+day;
+}
+function shortBirthday(s){
+ const raw=String(s??'').trim();
+ let m=raw.match(/^\s*\d{4}[\/\-年](\d{1,2})[\/\-月](\d{1,2})/);
+ if(!m)m=raw.match(/(\d{1,2})[\/\-月](\d{1,2})/);
+ return m?`${Number(m[1])}/${Number(m[2])}`:raw;
+}
+function metricRank(value,getter,higherBetter=true){
+ const v=finiteNumber(value);
+ if(v==null)return null;
+ const vals=H.map(getter).map(finiteNumber).filter(x=>x!=null);
+ if(!vals.length)return null;
+ const better=vals.filter(x=>higherBetter?x>v:x<v).length;
+ const ties=vals.filter(x=>Math.abs(x-v)<1e-9).length;
+ return better+(ties+1)/2;
+}
+function topPct(value,getter,higherBetter=true){
+ const vals=H.map(getter).map(finiteNumber).filter(x=>x!=null);
+ const rank=metricRank(value,getter,higherBetter);
+ if(rank==null||!vals.length)return null;
+ return Math.max(1,Math.min(100,Math.round(rank/vals.length*100)));
+}
+function heatByTopPct(pct){
+ if(pct==null)return '#777';
+ const t=Math.max(0,Math.min(1,(pct-1)/99));
+ const hue=220*t;
+ return `hsl(${hue.toFixed(0)} 78% 42%)`;
+}
+function setHeatPanel(panelId,pct){
+ const el=$(panelId);
+ if(!el)return;
+ el.style.background=heatByTopPct(pct);
+ el.classList.toggle('metric-missing',pct==null);
+}
+function setPct(id,pct){
+ const el=$(id);
+ if(el)el.textContent=pct==null?'—':`上位${pct}%`;
+}
+function futureHeightValue(h){return finiteNumber(extra(h.no).futureHeight)}
+function futureChestValue(h){return finiteNumber(extra(h.no).futureChest)}
+
 function renderFutureBody(no){
- const e=extra(no), h=byNo[no], avg=(TE.cohortAverageBySex||{})[h.sex]||{};
- if(e.futureHeight==null||e.futureChest==null){
-   $('futureBody').classList.add('hidden');return;
+ const e=extra(no), h=byNo[no];
+ const fh=finiteNumber(e.futureHeight), fc=finiteNumber(e.futureChest);
+
+ if(fh==null){
+   $('futureHeight').textContent='—';
+   setPct('pFutureHeight',null);setHeatPanel('panelFutureHeight',null);
+ }else{
+   const gain=fh-finiteNumber(h.height);
+   $('futureHeight').textContent=`${fh.toFixed(1)}cm (${gain>=0?'+':''}${gain.toFixed(1)})`;
+   const pct=topPct(fh,futureHeightValue,true);
+   setPct('pFutureHeight',pct);setHeatPanel('panelFutureHeight',pct);
  }
- $('futureHeight').textContent=`${e.futureHeight.toFixed(1)}cm (${signed(e.futureHeightDiff)})`;
- $('futureChest').textContent=`${e.futureChest.toFixed(1)}cm (${signed(e.futureChestDiff)})`;
- $('futureHeight').style.color=e.futureHeightColor||'';
- $('futureChest').style.color=e.futureChestColor||'';
- $('futureAvg').textContent=`${h.sex}平均：体高 ${Number(avg.futureHeight).toFixed(1)}cm / 胸囲 ${Number(avg.futureChest).toFixed(1)}cm`;
- $('futureBody').classList.remove('hidden');
+
+ if(fc==null){
+   $('futureChest').textContent='—';
+   setPct('pFutureChest',null);setHeatPanel('panelFutureChest',null);
+ }else{
+   const gain=fc-finiteNumber(h.chest);
+   $('futureChest').textContent=`${fc.toFixed(1)}cm (${gain>=0?'+':''}${gain.toFixed(1)})`;
+   const pct=topPct(fc,futureChestValue,true);
+   setPct('pFutureChest',pct);setHeatPanel('panelFutureChest',pct);
+ }
 }
 function renderSurgery(no){
  const text=SD[String(no)];
@@ -306,9 +372,38 @@ function renderSurgery(no){
 function openHorse(no){
  const h=byNo[no];current=h;$('stitle').innerHTML=`${safeText(displayName(h))}`;$('smeta').innerHTML=`${safeText(h.sex)} / ${safeText(h.trainer)} <span class="trainer-stat">${safeText(trainerStat(h))}</span> / ${safeText(h.birthday)}`;
  $('psire').textContent=h.sire;$('pdam').innerHTML=damLink(h);$('pbms').textContent=h.bms;
- $('mrank').textContent='#'+h.rank;$('mscore').textContent=h.score.toFixed(1);$('mprice').textContent=Math.round(h.price)+'万';
- $('mweight').textContent=Math.round(h.weight)+'kg';$('mfr').textContent=Math.round(h.predFR)+'kg';$('mgain').textContent=(h.gain>=0?'+':'')+Math.round(h.gain)+'kg';
- $('mheight').textContent=h.height.toFixed(1)+'cm';$('mchest').textContent=h.chest.toFixed(1)+'cm';$('mcannon').textContent=h.cannon.toFixed(1)+'cm';renderFutureBody(no);renderSurgery(no);
+ // 3x3 panel: index shows rank; all other panels show raw value + top percentile among all 94.
+ $('mrank').textContent=`${h.rank}位`;
+ $('pIndex').textContent='';
+ const indexPct=Math.max(1,Math.min(100,Math.round(Number(h.rank)/H.length*100)));
+ setHeatPanel('panelIndex',indexPct);
+
+ $('mprice').textContent=Math.round(h.price)+'万';
+ const pricePct=topPct(h.price,x=>x.price,true);
+ setPct('pPrice',pricePct);setHeatPanel('panelPrice',pricePct);
+
+ $('mcannon').textContent=Number(h.cannon).toFixed(1)+'cm';
+ const cannonPct=topPct(h.cannon,x=>x.cannon,true);
+ setPct('pCannon',cannonPct);setHeatPanel('panelCannon',cannonPct);
+
+ $('mweight').textContent=Math.round(h.weight)+'kg';
+ const weightPct=topPct(h.weight,x=>x.weight,true);
+ setPct('pWeight',weightPct);setHeatPanel('panelWeight',weightPct);
+
+ $('mheight').textContent=Number(h.height).toFixed(1)+'cm';
+ const heightPct=topPct(h.height,x=>x.height,true);
+ setPct('pHeight',heightPct);setHeatPanel('panelHeight',heightPct);
+
+ $('mchest').textContent=Number(h.chest).toFixed(1)+'cm';
+ const chestPct=topPct(h.chest,x=>x.chest,true);
+ setPct('pChest',chestPct);setHeatPanel('panelChest',chestPct);
+
+ const fr=finiteNumber(h.predFR), gain=finiteNumber(h.gain);
+ $('mfr').textContent=fr==null?'—':`${Math.round(fr)}kg (${gain==null?'—':`${gain>=0?'+':''}${Math.round(gain)}kg`})`;
+ const frPct=fr==null?null:topPct(fr,x=>x.predFR,true);
+ setPct('pFR',frPct);setHeatPanel('panelFR',frPct);
+
+ renderFutureBody(no);renderSurgery(no);
  $('earnIndex').textContent=h.earnIndex.toFixed(1);$('earnRank').textContent=`94頭中 ${h.earnRank}位相当`;
  $('winIndex').textContent=h.winIndex.toFixed(1);$('winRank').textContent=`94頭中 ${h.winRank}位相当`;
  const s=loadState(no);$('star').textContent=s.star?'★':'☆';$('star').classList.toggle('on',!!s.star);$('memo').value=s.memo||'';

@@ -218,3 +218,9 @@ header{position:sticky;top:0;z-index:40;background:rgba(22,22,22,.96);color:#fff
 .memo-label{font-size:12px;font-weight:950;color:#2e3941;margin:0 0 5px 2px}
 .memo{padding-bottom:2px}
 .memo textarea{min-height:92px}
+
+
+.metric-heat.metric-light{color:#222}
+.metric-heat.metric-light .l,
+.metric-heat.metric-light .pct{color:#333}
+.metric-heat.metric-light .v{color:#111}

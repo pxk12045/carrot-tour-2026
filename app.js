@@ -317,16 +317,22 @@ function topPctBySex(h,value,getter,higherBetter=true){
  return Math.max(1,Math.min(100,Math.round(rank/vals.length*100)));
 }
 function heatByTopPct(pct){
- if(pct==null)return '#777';
- const t=Math.max(0,Math.min(1,(pct-1)/99));
- const hue=220*t;
- return `hsl(${hue.toFixed(0)} 78% 42%)`;
+ if(pct==null)return '#777777';
+ const t=Math.max(0,Math.min(1,(Number(pct)-1)/99));
+ // Red -> white -> blue. 1%=strong red, ~50%=white, 100%=strong blue.
+ const red=[215,48,39], white=[255,255,255], blue=[33,102,172];
+ const mix=(a,b,u)=>a.map((v,i)=>Math.round(v+(b[i]-v)*u));
+ const rgb=t<=0.5?mix(red,white,t/0.5):mix(white,blue,(t-0.5)/0.5);
+ return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
 }
 function setHeatPanel(panelId,pct){
  const el=$(panelId);
  if(!el)return;
  el.style.background=heatByTopPct(pct);
  el.classList.toggle('metric-missing',pct==null);
+ const p=Number(pct);
+ const middle=Number.isFinite(p) && p>=30 && p<=70;
+ el.classList.toggle('metric-light',middle);
 }
 function setPct(id,pct,sex=''){
  const el=$(id);
@@ -375,8 +381,8 @@ function openHorse(no){
  $('psire').textContent=h.sire;$('pdam').innerHTML=damLink(h);$('pbms').textContent=h.bms;
  // 3x3 panel: index shows rank; all other panels show raw value + top percentile among all 94.
  $('mrank').textContent=Number(h.score).toFixed(1);
- $('pIndex').textContent='';
  const indexPct=Math.max(1,Math.min(100,Math.round(Number(h.rank)/H.length*100)));
+ $('pIndex').textContent=`上位${indexPct}%`;
  setHeatPanel('panelIndex',indexPct);
 
  $('mprice').textContent=Math.round(h.price)+'万';

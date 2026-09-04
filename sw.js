@@ -1,4 +1,4 @@
-const CACHE='carrot-tour-20260904-v21';
+const CACHE='carrot-tour-20260904-v22';
 const CORE=[
   './',
   './index.html',
@@ -10,6 +10,7 @@ const CORE=[
   './surgery-data.js?v=20260904-v21',
   './tour-extra-data.js?v=20260904-v21',
   './reference-data.js?v=20260904-v21',
+  './application-status.js?v=20260904-v22',
   './manifest.webmanifest?v=20260904-v21',
   './icon-180.png',
   './icon-512.png',
@@ -19,7 +20,6 @@ const CORE=[
   './map-y910.jpg',
   './map-y1112.jpg'
 ];
-
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)));
   self.skipWaiting();
@@ -31,7 +31,6 @@ self.addEventListener('activate', event => {
   );
   self.clients.claim();
 });
-
 async function networkFirst(request) {
   try {
     const fresh = await fetch(request, {cache:'no-store'});
@@ -42,7 +41,6 @@ async function networkFirst(request) {
     return (await caches.match(request)) || (await caches.match('./index.html'));
   }
 }
-
 async function cacheFirst(request) {
   const cached = await caches.match(request);
   if (cached) return cached;
@@ -60,7 +58,6 @@ self.addEventListener('fetch', event => {
     event.respondWith(networkFirst(req));
     return;
   }
-
   if (/\.(?:jpg|png)$/.test(url.pathname)) {
     event.respondWith(cacheFirst(req));
     return;

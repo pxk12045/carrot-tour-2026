@@ -1,4 +1,4 @@
-const CACHE='carrot-tour-20260904-v24';
+const CACHE='carrot-tour-20260904-v26';
 const CORE=[
   './',
   './index.html',
@@ -10,8 +10,8 @@ const CORE=[
   './surgery-data.js?v=20260904-v21',
   './tour-extra-data.js?v=20260904-v21',
   './reference-data.js?v=20260904-v21',
-  './application-status.js?v=20260904-v23',
-  './interim-scope.js?v=20260904-v24',
+  './application-status.js?v=20260904-v26',
+  './interim-scope.js?v=20260904-v26',
   './manifest.webmanifest?v=20260904-v21',
   './icon-180.png',
   './icon-512.png',

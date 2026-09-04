@@ -1,4 +1,4 @@
-// CARROT TOUR 2026 - application status & lottery estimate panel v23
+// CARROT TOUR 2026 - application status & lottery estimate panel v26
 // Source: 2026年度1歳募集馬・申込み状況の中間発表2回目（2026-09-04 17:00）
 // Projection assumption: current applications = 25.3% of final applications.
 // IMPORTANT: winning rates are coarse estimates. They do not model ×2/×1/×なし or payment-delay ranks.
@@ -110,18 +110,19 @@
       .application-status-kpi .l{font-size:9px;color:#786b5b;margin-top:3px;line-height:1.25}
       .application-status-subtitle{font-size:10px;font-weight:950;color:#6a4b23;margin:10px 0 6px}
       .application-status-projection{display:flex;align-items:baseline;justify-content:space-between;gap:8px;background:#fff3dc;border:1px solid #ebc98a;border-radius:10px;padding:8px 9px;margin-top:7px}
-      .application-status-projection .label{font-size:10px;font-weight:900;color:#765b2b}
-      .application-status-projection .value{font-size:23px;font-weight:1000;line-height:1;color:#8a4d00;font-variant-numeric:tabular-nums}
-      .application-status-projection .unit{font-size:10px;font-weight:900;margin-left:2px}
+      .application-status-projection-label{font-size:10px;font-weight:900;color:#765b2b}
+      .application-status-projection-value{font-size:23px;font-weight:1000;line-height:1;color:#8a4d00;font-variant-numeric:tabular-nums}
+      .application-status-projection-unit{font-size:10px;font-weight:900;margin-left:2px}
       .lottery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
       .lottery-card{background:#fff;border:1px solid #e4ded4;border-radius:10px;padding:7px 6px;min-width:0}
-      .lottery-card .name{font-size:9px;font-weight:900;line-height:1.25;color:#665c50;min-height:22px}
-      .lottery-card .rate{font-size:21px;font-weight:1000;line-height:1.05;margin-top:2px;font-variant-numeric:tabular-nums}
-      .lottery-card .count{font-size:8px;color:#948777;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-      .lottery-card.safe .rate{color:#19713a}
-      .lottery-card.mid .rate{color:#a36500}
-      .lottery-card.hard .rate{color:#bb2929}
-      .lottery-card.na .rate{color:#9b9389}
+      .application-status-lottery-name{font-size:9px;font-weight:900;line-height:1.25;color:#665c50;min-height:22px}
+      .application-status-lottery-rate{font-size:21px;font-weight:1000;line-height:1.05;margin-top:2px;font-variant-numeric:tabular-nums}
+      .application-status-lottery-count{font-size:8px;color:#948777;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .application-status-lottery-name,.application-status-lottery-rate,.application-status-lottery-count{position:static!important;float:none!important;transform:none!important;writing-mode:horizontal-tb!important;white-space:normal}
+      .lottery-card.safe .application-status-lottery-rate{color:#19713a}
+      .lottery-card.mid .application-status-lottery-rate{color:#a36500}
+      .lottery-card.hard .application-status-lottery-rate{color:#bb2929}
+      .lottery-card.na .application-status-lottery-rate{color:#9b9389}
       .application-status-note{font-size:9px;line-height:1.45;color:#81725e;margin-top:7px}
       .application-status-warning{font-size:9px;line-height:1.45;color:#9a5a12;background:#fff6e7;border-radius:8px;padding:6px 7px;margin-top:7px}
       .application-status-unlisted{background:#fff;border:1px dashed #d8cbb9;border-radius:10px;padding:9px;font-size:11px;font-weight:850;color:#6c6256;line-height:1.5}
@@ -169,9 +170,9 @@
 
   function lotteryCard(name, p, countText) {
     return `<div class="lottery-card ${rateClass(p)}">
-      <div class="name">${name}</div>
-      <div class="rate">${pct(p)}</div>
-      <div class="count">${countText || ''}</div>
+      <div class="application-status-lottery-name">${name}</div>
+      <div class="application-status-lottery-rate">${pct(p)}</div>
+      <div class="application-status-lottery-count">${countText || ''}</div>
     </div>`;
   }
 
@@ -227,8 +228,8 @@
       <div class="application-status-grid">${grid}</div>
 
       <div class="application-status-projection">
-        <div class="label">25.3% → 最終申込見込<br><span style="font-weight:700;font-size:9px">現在 × ${FINAL_MULTIPLIER.toFixed(2)}</span></div>
-        <div><span class="value">${e.finalTotal.toLocaleString('ja-JP')}</span><span class="unit">口</span></div>
+        <div class="application-status-projection-label">25.3% → 最終申込見込<br><span style="font-weight:700;font-size:9px">現在 × ${FINAL_MULTIPLIER.toFixed(2)}</span></div>
+        <div><span class="application-status-projection-value">${e.finalTotal.toLocaleString('ja-JP')}</span><span class="application-status-projection-unit">口</span></div>
       </div>
 
       <div class="application-status-subtitle">概算当選率</div>

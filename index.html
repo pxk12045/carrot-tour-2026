@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="CARROT TOUR">
-<link rel="manifest" href="manifest.webmanifest?v=20260904-v20">
+<link rel="manifest" href="manifest.webmanifest?v=20260904-v21">
 <link rel="apple-touch-icon" href="icon-180.png">
-<link rel="stylesheet" href="style.css?v=20260904-v20">
+<link rel="stylesheet" href="style.css?v=20260904-v21">
 <title>CARROT TOUR 2026</title>
 </head>
 <body>
@@ -24,7 +24,7 @@
   <button class="viewbtn" data-view="stars">★候補</button>
   <button class="viewbtn" data-view="waveSoftGood" title="うねり・柔らかさ＝◎">うね柔</button>
 </div>
-<div class="data-tools"><button id="exportOpen" class="export-open" type="button">データ保存 / Export</button></div>
+<div class="data-tools"><button id="exportOpen" class="export-open" type="button">データ共有 / 保存</button></div>
 <section id="mapView">
   <div id="topPicks" class="top-picks"></div>
   <div class="map-toolbar">
@@ -42,13 +42,15 @@
 <div id="exportPanel" class="export-panel" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
   <div class="handle"></div>
   <div class="export-head">
-    <div><div id="exportTitle" class="export-title">ツアーデータ保存</div><div id="exportSummary" class="export-summary"></div></div>
+    <div><div id="exportTitle" class="export-title">ツアーデータ共有 / 保存</div><div id="exportSummary" class="export-summary"></div></div>
     <button id="exportCloseX" class="export-x" type="button" aria-label="閉じる">×</button>
   </div>
-  <div class="export-note">CSVは全94頭を一覧化。JSONは★・テンプレコメント・特記事項・動画評価変更値をlocalStorageのまま保存するバックアップです。</div>
+  <div class="export-note">JSONを別端末へ共有して「JSONを読み込む」を押すと、★・現場コメント・引き手評価・動画評価をまとめて移せます。読み込み時はバックアップ側のデータを優先します。</div>
   <div class="export-actions">
-    <button id="exportCsv" class="export-btn primary" type="button">CSVを書き出す</button>
-    <button id="exportJson" class="export-btn" type="button">JSONバックアップ</button>
+    <button id="exportCsv" class="export-btn" type="button">CSVを書き出す</button>
+    <button id="exportJson" class="export-btn primary" type="button">JSONを共有 / 保存</button>
+    <button id="importJson" class="export-btn import" type="button">JSONを読み込む</button>
+    <input id="importJsonFile" type="file" accept=".json,application/json" hidden>
   </div>
   <div id="exportStatus" class="export-status"></div>
   <button id="exportClose" class="export-close" type="button">閉じる</button>
@@ -72,7 +74,7 @@
    </details>
    <div id="familySourceNote" class="family-source"></div>
  </div>
- <div class="metrics metrics-v20">
+ <div class="metrics metrics-v21">
   <div id="panelIndex" class="metric metric-heat"><div class="l">指数</div><div id="mrank" class="v"></div><div id="pIndex" class="pct"></div></div>
   <div id="panelPrice" class="metric metric-heat"><div class="l">価格</div><div id="mprice" class="v"></div><div id="pPrice" class="pct"></div></div>
   <div id="panelCannon" class="metric metric-heat"><div class="l">管囲</div><div id="mcannon" class="v"></div><div id="pCannon" class="pct"></div></div>
@@ -125,11 +127,11 @@
  <div class="memo"><div class="memo-label">特記事項</div><textarea id="memo" placeholder="テンプレにない内容だけ入力（この端末に保存）"></textarea></div>
  <button id="close" class="close">閉じる</button>
 </div>
-<script src="horses.js?v=20260904-v20"></script>
-<script src="video-evaluation.js?v=20260904-v20"></script>
-<script src="family-data.js?v=20260904-v20"></script>
-<script src="surgery-data.js?v=20260904-v20"></script>
-<script src="tour-extra-data.js?v=20260904-v20"></script>
-<script src="reference-data.js?v=20260904-v20"></script>
-<script src="app.js?v=20260904-v20"></script>
+<script src="horses.js?v=20260904-v21"></script>
+<script src="video-evaluation.js?v=20260904-v21"></script>
+<script src="family-data.js?v=20260904-v21"></script>
+<script src="surgery-data.js?v=20260904-v21"></script>
+<script src="tour-extra-data.js?v=20260904-v21"></script>
+<script src="reference-data.js?v=20260904-v21"></script>
+<script src="app.js?v=20260904-v21"></script>
 </body></html>

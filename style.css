@@ -232,3 +232,7 @@ header{position:sticky;top:0;z-index:40;background:rgba(22,22,22,.96);color:#fff
 .rankbadge.noheat{
   box-shadow:inset 0 0 0 1px rgba(0,0,0,.18),0 1px 3px rgba(0,0,0,.08);
 }
+
+/* v21 cross-device JSON sharing */
+.export-actions{display:grid;grid-template-columns:1fr;gap:8px}
+.export-btn.import{border:1px solid #356b9a;background:#eef6ff;color:#194d79}

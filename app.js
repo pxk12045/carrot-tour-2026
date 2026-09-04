@@ -563,7 +563,7 @@ function exportJsonObject(){
  });
  return {
    format:'carrot-tour-local-backup',
-   version:20,
+   version:21,
    season:2026,
    primaryModel:'v3.1',
    primaryModelNote:'v3 fixed coefficients; recruitment weight and predFR contributions at 75%',
@@ -594,6 +594,63 @@ async function shareOrDownload(filename,mime,text){
  setTimeout(()=>URL.revokeObjectURL(url),30000);
  return 'ファイルを書き出しました。';
 }
+
+function normalizeImportedState(v){
+ if(!v || typeof v!=='object' || Array.isArray(v))return {};
+ const out={};
+ if(Object.prototype.hasOwnProperty.call(v,'star')) out.star=!!v.star;
+ if(Object.prototype.hasOwnProperty.call(v,'memo')) out.memo=String(v.memo??'');
+ if(v.videoEval && typeof v.videoEval==='object' && !Array.isArray(v.videoEval)){
+   out.videoEval={};
+   EXPORT_VIDEO_KEYS.forEach(k=>{
+     if(Object.prototype.hasOwnProperty.call(v.videoEval,k)){
+       const n=Number(v.videoEval[k]);
+       if(n===1||n===0||n===-1)out.videoEval[k]=n;
+     }
+   });
+ }
+ if(v.tourTemplate && typeof v.tourTemplate==='object' && !Array.isArray(v.tourTemplate)){
+   out.tourTemplate={};
+   Object.keys(TOUR_TEMPLATE).forEach(k=>{
+     const allowed=new Set(TOUR_TEMPLATE[k].options||[]);
+     let vals=v.tourTemplate[k];
+     if(!Array.isArray(vals)) vals=vals==null?[]:[vals];
+     vals=vals.map(String).filter(x=>allowed.has(x));
+     if(TOUR_TEMPLATE[k].single && vals.length>1)vals=vals.slice(0,1);
+     if(vals.length)out.tourTemplate[k]=vals;
+   });
+ }
+ return out;
+}
+function restoreJsonBackup(obj){
+ if(!obj || obj.format!=='carrot-tour-local-backup' || !obj.states || typeof obj.states!=='object'){
+   throw new Error('このアプリのJSONバックアップではありません。');
+ }
+ const known=new Set(H.map(h=>String(h.no)));
+ let restored=0;
+ Object.entries(obj.states).forEach(([no,entry])=>{
+   if(!known.has(String(no)))return;
+   const raw=(entry && typeof entry==='object' && Object.prototype.hasOwnProperty.call(entry,'state'))?entry.state:entry;
+   const state=normalizeImportedState(raw);
+   localStorage.setItem(stateKey(no),JSON.stringify(state));
+   restored++;
+ });
+ if(!restored)throw new Error('読み込める馬データがありません。');
+ return restored;
+}
+async function importJsonFile(file){
+ if(!file) return;
+ const text=await file.text();
+ let obj;
+ try{obj=JSON.parse(text)}catch(e){throw new Error('JSONファイルを読み取れませんでした。')}
+ const count=Object.keys(obj?.states||{}).filter(no=>H.some(h=>String(h.no)===String(no))).length;
+ if(!count)throw new Error('2026年募集馬のデータが見つかりません。');
+ const exportedAt=obj.exportedAt?new Date(obj.exportedAt).toLocaleString():'日時不明';
+ const ok=window.confirm(`この端末へ${count}頭分を読み込みます。\n同じ馬の現在データはバックアップ側で上書きされます。\n\nバックアップ日時: ${exportedAt}\n続けますか？`);
+ if(!ok)return 0;
+ return restoreJsonBackup(obj);
+}
+
 $('exportOpen').onclick=openExport;
 $('exportClose').onclick=closeExport;
 $('exportCloseX').onclick=closeExport;
@@ -604,10 +661,28 @@ $('exportCsv').onclick=async()=>{
  $('exportStatus').textContent=msg;
 };
 $('exportJson').onclick=async()=>{
- $('exportStatus').textContent='JSONバックアップを準備中…';
+ $('exportStatus').textContent='共有用JSONを準備中…';
  const text=JSON.stringify(exportJsonObject(),null,2);
  const msg=await shareOrDownload(`carrot-tour-2026_backup_${fileStamp()}.json`,'application/json;charset=utf-8',text);
  $('exportStatus').textContent=msg;
+};
+$('importJson').onclick=()=>{$('importJsonFile').value='';$('importJsonFile').click();};
+$('importJsonFile').onchange=async e=>{
+ const file=e.target.files&&e.target.files[0];
+ if(!file)return;
+ $('exportStatus').textContent='JSONを確認中…';
+ try{
+   const restored=await importJsonFile(file);
+   if(!restored){$('exportStatus').textContent='読み込みをキャンセルしました。';return;}
+   $('exportStatus').textContent=`${restored}頭分を読み込みました。画面を更新しています…`;
+   renderAll();
+   updateExportSummary();
+   if(current && byNo[current.no])openHorse(current.no);
+   setTimeout(()=>{$('exportStatus').textContent=`${restored}頭分の共有データを読み込みました。`;},200);
+ }catch(err){
+   console.error(err);
+   $('exportStatus').textContent=`読み込み失敗: ${err.message||err}`;
+ }
 };
 
 function renderAll(){

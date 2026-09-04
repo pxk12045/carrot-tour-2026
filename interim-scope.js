@@ -22,7 +22,9 @@
   currentVenueHorses = function(){
     if (venue === 'all') return H;
     if (venue === 'interim') {
-      return H.filter(h => Object.prototype.hasOwnProperty.call(STATUS, String(h.no)));
+      return H
+    .filter(h => Object.prototype.hasOwnProperty.call(STATUS, String(h.no)))
+    .sort((a, b) => Number(a.no) - Number(b.no));
     }
     return H.filter(h => h.venue === venue);
   };

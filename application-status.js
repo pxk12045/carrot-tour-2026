@@ -1,4 +1,4 @@
-// CARROT TOUR 2026 - application status & lottery estimate panel v26
+// CARROT TOUR 2026 - application status & lottery estimate panel v27
 // Source: 2026年度1歳募集馬・申込み状況の中間発表2回目（2026-09-04 17:00）
 // Projection assumption: current applications = 25.3% of final applications.
 // IMPORTANT: winning rates are coarse estimates. They do not model ×2/×1/×なし or payment-delay ranks.
@@ -106,27 +106,44 @@
       .application-status-badge.new{background:#fff0f0;color:#c22b2b;border:1px solid #f1baba}
       .application-status-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
       .application-status-kpi{background:#fff;border:1px solid #eadfce;border-radius:10px;padding:7px 5px;text-align:center;min-width:0}
-      .application-status-kpi .v{font-size:20px;font-weight:950;line-height:1.05;font-variant-numeric:tabular-nums;color:#2c241a}
-      .application-status-kpi .l{font-size:9px;color:#786b5b;margin-top:3px;line-height:1.25}
+      .application-status-kpi-value{font-size:20px;font-weight:950;line-height:1.05;font-variant-numeric:tabular-nums;color:#2c241a}
+      .application-status-kpi-label{font-size:9px;color:#786b5b;margin-top:3px;line-height:1.25}
       .application-status-subtitle{font-size:10px;font-weight:950;color:#6a4b23;margin:10px 0 6px}
       .application-status-projection{display:flex;align-items:baseline;justify-content:space-between;gap:8px;background:#fff3dc;border:1px solid #ebc98a;border-radius:10px;padding:8px 9px;margin-top:7px}
       .application-status-projection-label{font-size:10px;font-weight:900;color:#765b2b}
       .application-status-projection-value{font-size:23px;font-weight:1000;line-height:1;color:#8a4d00;font-variant-numeric:tabular-nums}
       .application-status-projection-unit{font-size:10px;font-weight:900;margin-left:2px}
-      .lottery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
-      .lottery-card{background:#fff;border:1px solid #e4ded4;border-radius:10px;padding:7px 6px;min-width:0}
+      .application-status-lottery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+      .application-status-lottery-card{background:#fff;border:1px solid #e4ded4;border-radius:10px;padding:7px 6px;min-width:0}
       .application-status-lottery-name{font-size:9px;font-weight:900;line-height:1.25;color:#665c50;min-height:22px}
       .application-status-lottery-rate{font-size:21px;font-weight:1000;line-height:1.05;margin-top:2px;font-variant-numeric:tabular-nums}
       .application-status-lottery-count{font-size:8px;color:#948777;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .application-status-lottery-card,
+      .application-status-lottery-name,
+      .application-status-lottery-rate,
+      .application-status-lottery-count,
+      .application-status-kpi-value,
+      .application-status-kpi-label{
+        position:static!important;
+        inset:auto!important;
+        left:auto!important;
+        right:auto!important;
+        top:auto!important;
+        bottom:auto!important;
+        float:none!important;
+        transform:none!important;
+        writing-mode:horizontal-tb!important;
+        text-orientation:mixed!important;
+      }
       .application-status-lottery-name,.application-status-lottery-rate,.application-status-lottery-count{position:static!important;float:none!important;transform:none!important;writing-mode:horizontal-tb!important;white-space:normal}
-      .lottery-card.safe .application-status-lottery-rate{color:#19713a}
-      .lottery-card.mid .application-status-lottery-rate{color:#a36500}
-      .lottery-card.hard .application-status-lottery-rate{color:#bb2929}
-      .lottery-card.na .application-status-lottery-rate{color:#9b9389}
+      .application-status-lottery-card.application-status-rate-safe .application-status-lottery-rate{color:#19713a}
+      .application-status-lottery-card.application-status-rate-mid .application-status-lottery-rate{color:#a36500}
+      .application-status-lottery-card.application-status-rate-hard .application-status-lottery-rate{color:#bb2929}
+      .application-status-lottery-card.application-status-rate-na .application-status-lottery-rate{color:#9b9389}
       .application-status-note{font-size:9px;line-height:1.45;color:#81725e;margin-top:7px}
       .application-status-warning{font-size:9px;line-height:1.45;color:#9a5a12;background:#fff6e7;border-radius:8px;padding:6px 7px;margin-top:7px}
       .application-status-unlisted{background:#fff;border:1px dashed #d8cbb9;border-radius:10px;padding:9px;font-size:11px;font-weight:850;color:#6c6256;line-height:1.5}
-      @media(min-width:650px){.application-status-kpi .v{font-size:21px}}
+      @media(min-width:650px){.application-status-kpi-value{font-size:21px}}
     `;
     document.head.appendChild(style);
   }
@@ -158,18 +175,18 @@
   }
 
   function kpi(value, label) {
-    return `<div class="application-status-kpi"><div class="v">${value}</div><div class="l">${label}</div></div>`;
+    return `<div class="application-status-kpi"><div class="application-status-kpi-value">${value}</div><div class="application-status-kpi-label">${label}</div></div>`;
   }
 
   function rateClass(p) {
-    if (p == null) return 'na';
-    if (p >= 0.8) return 'safe';
-    if (p >= 0.4) return 'mid';
-    return 'hard';
+    if (p == null) return 'application-status-rate-na';
+    if (p >= 0.8) return 'application-status-rate-safe';
+    if (p >= 0.4) return 'application-status-rate-mid';
+    return 'application-status-rate-hard';
   }
 
   function lotteryCard(name, p, countText) {
-    return `<div class="lottery-card ${rateClass(p)}">
+    return `<div class="application-status-lottery-card ${rateClass(p)}">
       <div class="application-status-lottery-name">${name}</div>
       <div class="application-status-lottery-rate">${pct(p)}</div>
       <div class="application-status-lottery-count">${countText || ''}</div>
@@ -233,7 +250,7 @@
       </div>
 
       <div class="application-status-subtitle">概算当選率</div>
-      <div class="lottery-grid">${lottery}</div>
+      <div class="application-status-lottery-grid">${lottery}</div>
 
       <div class="application-status-warning">
         当選率は「現時点の構成比が最終まで同じ」と仮定した概算です。
